@@ -1,0 +1,27 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include layout="@layout/pager_layout"/>
+
+    <TextView
+        android:id="@+id/image_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:layout_gravity="bottom"
+        android:padding="30dp"
+        android:textSize="20sp" />
+
+    <com.linroid.filtermenu.library.FilterMenuLayout
+        android:id="@+id/filter_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp" />
+        <!--app:expandedRadius="96dp"-->
+        <!--app:collapsedRadius="24dp"-->
+        <!--app:centerBottom="48dp"-->
+        <!--app:centerRight="48dp"-->
+        <!--app:primaryColor="?colorPrimary"-->
+        <!--app:primaryDarkColor="?colorPrimaryDark"/>-->
+
+</merge>

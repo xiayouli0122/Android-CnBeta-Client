@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="ripple_color">#40000000</color>
+    <color name="gray_80">#CC000000</color>
 </resources>

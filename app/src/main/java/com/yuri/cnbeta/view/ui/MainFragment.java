@@ -1,5 +1,6 @@
 package com.yuri.cnbeta.view.ui;
 
+import android.content.Intent;
 import android.provider.Settings;
 import android.telecom.Call;
 import android.view.LayoutInflater;
@@ -117,6 +118,9 @@ public class MainFragment extends BaseListFragment<Article> {
         public void onItemClick(View view, int position) {
             Article article = mDataList.get(position);
             Log.d("" + article.getSid());
+
+            Intent intent = NewsDetailActivity.getIntent(getActivity(), article.getSid());
+            startActivity(intent);
         }
 
     }

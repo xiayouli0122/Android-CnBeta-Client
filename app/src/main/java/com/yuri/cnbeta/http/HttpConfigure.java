@@ -1,10 +1,15 @@
 package com.yuri.cnbeta.http;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /**
  * Created by Yuri on 2016/4/8.
@@ -23,6 +28,13 @@ public class HttpConfigure {
     private static final String EXTRA = "mpuffgvbvbttn3Rc";
     private static final String KEY_METHOD = "method";
     private static final String NEWS_LISTS = "Article.Lists";
+    private static final String NEWS_CONTENT = "Article.NewsContent";
+
+    private static final String KEY_SID = "sid";
+
+    private static final String ARTICLE_URL = BASE_URL + "/articles/%s.htm";
+
+    public static final Pattern ARTICLE_PATTERN = Pattern.compile("http://www\\.cnbeta\\.com/articles/(\\d+)\\.htm");
 
 
     private static Map<String, String> initParamMap() {
@@ -33,6 +45,21 @@ public class HttpConfigure {
         map.put("timestamp", String.valueOf(System.currentTimeMillis()));
         return map;
     }
+
+    public static String newsContent(String sid) {
+        Map<String, String> paramMap = initParamMap();
+        paramMap.put(KEY_METHOD, NEWS_CONTENT);
+        paramMap.put(KEY_SID, sid);
+        String url = buildUrl(paramMap);
+        return url;
+    }
+
+//    public static String buildArtileUrl(String sid) {
+////        return String.format(Locale.CHINA, ARTICLE_URL, sid);
+//        Map<String, String> paramMap = initParamMap();
+//        paramMap.put(KEY_METHOD, NEWS_CONTENT);
+//        paramMap.put(KEY_SID, sid);
+//    }
 
     public static String buildArtistUrl() {
         Map<String, String> paramMap = initParamMap();

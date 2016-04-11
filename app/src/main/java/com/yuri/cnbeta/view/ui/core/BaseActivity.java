@@ -46,9 +46,34 @@ public abstract class BaseActivity extends AppCompatActivity implements Toolbar.
         setContentView(layoutResID, titleResId, -1, mode);
     }
 
+    public void setContentView(int layoutResId, String title, int mode) {
+        super.setContentView(layoutResId);
+        setUpToolbar(title, -1, mode);
+    }
+
     public void setContentView(int layoutResID, int titleResId, int menuId, int mode) {
         super.setContentView(layoutResID);
         setUpToolbar(titleResId, menuId, mode);
+    }
+
+    protected void setUpToolbar(String title, int menuId, int mode) {
+        if (mode != MODE_NONE) {
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            toolbar.setTitle(title);
+//            toolbar_title = (textview) findviewbyid(r.id.toolbar_title);
+
+            if (mode == MODE_BACK) {
+//                toolbar.setnavigationicon(r.drawable.ic_toolbar_back);
+            }
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onNavigationBtnClicked();
+                }
+            });
+
+            setUpMenu(menuId);
+        }
     }
 
     protected void setUpToolbar(int titleResId, int menuId, int mode) {
@@ -86,6 +111,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Toolbar.
         if (titleResId > 0 && toolbar_title != null) {
             toolbar_title.setText(titleResId);
         }
+    }
+
+    protected void setUpTitle(String title) {
+        toolbar.setTitle(title);
     }
 
     protected void onNavigationBtnClicked() {
