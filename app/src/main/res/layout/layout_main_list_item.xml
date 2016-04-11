@@ -1,23 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="5dp"
     android:clickable="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:padding="8dp"
+        android:orientation="vertical"
+        android:background="@drawable/item_background"
+        >
 
         <TextView
             android:id="@+id/tv_news_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="这是一出生的放松空间的发生的快捷付款单剑圣放空间打开了"
             />
 
         <RelativeLayout
@@ -39,6 +42,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:drawableLeft="@mipmap/ic_views"
+                android:drawablePadding="4dp"
                 android:text="399"
                 />
 
@@ -48,19 +53,23 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/tv_news_read_count"
                 android:paddingRight="12dp"
+                android:drawableLeft="@mipmap/ic_comments"
+                android:drawablePadding="4dp"
                 android:text="22"
                 />
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
             <ImageView
                 android:id="@+id/iv_news_icon"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:src="@mipmap/ic_launcher"
-                android:scaleType="fitCenter"
+                android:layout_marginRight="8dp"
+                android:scaleType="centerInside"
                 />
 
             <TextView
@@ -70,9 +79,6 @@
                 android:maxLines="4"
                 android:ellipsize="end"
                 android:textSize="12sp"
-                android:text="送到附近时快捷的速度开飞机上课了山东会计法律思考手动咖啡机输了多少分收到了
-                开发建设 上了对方上的飞机回数据库和大家顺达废旧回收是冬季护肤身上的发生
-                是的发送到鼎折覆餗"
                 />
         </LinearLayout>
 

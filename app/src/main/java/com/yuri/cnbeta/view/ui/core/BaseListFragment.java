@@ -15,6 +15,7 @@ import com.yuri.cnbeta.view.widgets.layoutmanager.ILayoutManager;
 import com.yuri.cnbeta.view.widgets.layoutmanager.MyLinearLayoutManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Stay on 8/3/16.
@@ -22,7 +23,7 @@ import java.util.ArrayList;
  */
 public abstract class BaseListFragment<T> extends BaseFragment implements PullRecycler.OnRecyclerRefreshListener {
     protected BaseListAdapter adapter;
-    protected ArrayList<T> mDataList;
+    protected List<T> mDataList;
     protected PullRecycler recycler;
 
     @Override
@@ -37,7 +38,7 @@ public abstract class BaseListFragment<T> extends BaseFragment implements PullRe
         setUpAdapter();
         recycler.setOnRefreshListener(this);
         recycler.setLayoutManager(getLayoutManager());
-        recycler.addItemDecoration(getItemDecoration());
+//        recycler.addItemDecoration(getItemDecoration());
         recycler.setAdapter(adapter);
     }
 
