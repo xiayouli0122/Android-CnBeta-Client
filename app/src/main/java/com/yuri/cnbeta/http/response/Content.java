@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.model;
+package com.yuri.cnbeta.http.response;
 
 import java.io.Serializable;
 

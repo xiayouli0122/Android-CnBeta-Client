@@ -23,8 +23,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.ui.NewsDetailActivity" />
-        <activity android:name=".view.ui.ImageActivity" />
+        <activity android:name=".view.ui.NewsDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
+        <activity android:name=".view.ui.ImageActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
+        <activity android:name=".view.ui.NewsCommentActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
     </application>
 
 </manifest>

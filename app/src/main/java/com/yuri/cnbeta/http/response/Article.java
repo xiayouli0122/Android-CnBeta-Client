@@ -3,7 +3,6 @@ package com.yuri.cnbeta.http.response;
 import java.io.Serializable;
 
 /**
- * Bean Article(News Abstract Information)
  * Created by Wayne on 2016/2/21.
  */
 public class Article implements Serializable, Comparable<Article> {

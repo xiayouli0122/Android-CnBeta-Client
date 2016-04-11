@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -29,13 +30,17 @@ public class HttpConfigure {
     private static final String KEY_METHOD = "method";
     private static final String NEWS_LISTS = "Article.Lists";
     private static final String NEWS_CONTENT = "Article.NewsContent";
+    private static final String NEWS_COMMENT = "Article.Comment";
 
     private static final String KEY_SID = "sid";
+    private static final String KEY_PAGE = "page";
+    private static final String KEY_PAGE_SIZE = "pageSize";
 
     private static final String ARTICLE_URL = BASE_URL + "/articles/%s.htm";
 
     public static final Pattern ARTICLE_PATTERN = Pattern.compile("http://www\\.cnbeta\\.com/articles/(\\d+)\\.htm");
 
+    private static final String VALUE_PAGE_SIZE = "20";
 
     private static Map<String, String> initParamMap() {
         Map<String, String> map = new TreeMap<>();
@@ -44,6 +49,15 @@ public class HttpConfigure {
         map.put("v", V);
         map.put("timestamp", String.valueOf(System.currentTimeMillis()));
         return map;
+    }
+
+    public static String newsComment(String page, String sid) {
+        Map<String, String> paramMap = initParamMap();
+        paramMap.put(KEY_METHOD, NEWS_COMMENT);
+        paramMap.put(KEY_PAGE, page);
+        paramMap.put(KEY_PAGE_SIZE, VALUE_PAGE_SIZE);
+        paramMap.put(KEY_SID, sid);
+        return buildUrl(paramMap);
     }
 
     public static String newsContent(String sid) {

@@ -6,9 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
 import android.webkit.WebChromeClient;
@@ -16,12 +16,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.FutureTarget;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.Request;
@@ -33,16 +28,10 @@ import com.yuri.cnbeta.http.HttpListener;
 import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.log.Log;
-import com.yuri.cnbeta.model.Content;
+import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.utils.ToastUtil;
 import com.yuri.cnbeta.view.ui.core.BaseActivity;
 
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -58,6 +47,7 @@ public class NewsDetailActivity extends BaseActivity {
 
     private WebView mWebview;
     private WebSettings mWebSetting;
+    private FloatingActionButton mActionButton;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}%s</style>" +
@@ -87,6 +77,15 @@ public class NewsDetailActivity extends BaseActivity {
     @Override
     protected void setUpView() {
         mWebview = (WebView) findViewById(R.id.webview_details);
+        mActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        mActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("===============");
+                Intent intent = NewsCommentActivity.getIntent(NewsDetailActivity.this, mContent.getSid());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
