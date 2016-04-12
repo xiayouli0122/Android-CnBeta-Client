@@ -14,7 +14,6 @@ import com.yuri.cnbeta.view.widgets.PullRecycler;
 import com.yuri.cnbeta.view.widgets.layoutmanager.ILayoutManager;
 import com.yuri.cnbeta.view.widgets.layoutmanager.MyLinearLayoutManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,9 +21,9 @@ import java.util.List;
  * Powered by www.stay4it.com
  */
 public abstract class BaseListFragment<T> extends BaseFragment implements PullRecycler.OnRecyclerRefreshListener {
-    protected BaseListAdapter adapter;
+    protected BaseListAdapter mAdapter;
     protected List<T> mDataList;
-    protected PullRecycler recycler;
+    protected PullRecycler mRecycler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,16 +33,16 @@ public abstract class BaseListFragment<T> extends BaseFragment implements PullRe
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recycler = (PullRecycler) view.findViewById(R.id.pullRecycler);
+        mRecycler = (PullRecycler) view.findViewById(R.id.pullRecycler);
         setUpAdapter();
-        recycler.setOnRefreshListener(this);
-        recycler.setLayoutManager(getLayoutManager());
-//        recycler.addItemDecoration(getItemDecoration());
-        recycler.setAdapter(adapter);
+        mRecycler.setOnRefreshListener(this);
+        mRecycler.setLayoutManager(getLayoutManager());
+//        mRecycler.addItemDecoration(getItemDecoration());
+        mRecycler.setAdapter(mAdapter);
     }
 
     protected void setUpAdapter() {
-        adapter = new ListAdapter();
+        mAdapter = new ListAdapter();
     }
 
     protected ILayoutManager getLayoutManager() {

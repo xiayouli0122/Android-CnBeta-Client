@@ -10,18 +10,19 @@
         android:textColor="@android:color/white"
         android:layout_gravity="bottom"
         android:padding="30dp"
+        android:text="2/3"
         android:textSize="20sp" />
 
     <com.linroid.filtermenu.library.FilterMenuLayout
         android:id="@+id/filter_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:elevation="8dp" />
-        <!--app:expandedRadius="96dp"-->
-        <!--app:collapsedRadius="24dp"-->
-        <!--app:centerBottom="48dp"-->
-        <!--app:centerRight="48dp"-->
-        <!--app:primaryColor="?colorPrimary"-->
-        <!--app:primaryDarkColor="?colorPrimaryDark"/>-->
+        android:elevation="8dp"
+        app:expandedRadius="96dp"
+        app:collapsedRadius="24dp"
+        app:centerBottom="48dp"
+        app:centerRight="48dp"
+        app:primaryColor="?colorPrimary"
+        app:primaryDarkColor="?colorPrimaryDark"/>
 
 </merge>

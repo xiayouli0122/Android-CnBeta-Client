@@ -1,8 +1,7 @@
 package com.yuri.cnbeta.view.ui;
 
 import android.content.Intent;
-import android.provider.Settings;
-import android.telecom.Call;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,22 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
-import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.Request;
 import com.yolanda.nohttp.Response;
-import com.yuri.cnbeta.BuildConfig;
-import com.yuri.cnbeta.CnbetaService;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.http.CallServer;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
-import com.yuri.cnbeta.http.HttpResponseListener;
 import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.http.response.Article;
@@ -38,12 +28,17 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit.Retrofit;
 
 /**
  * Created by Yuri on 2016/4/7.
  */
 public class MainFragment extends BaseListFragment<Article> {
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mRecycler.setRefreshing();
+    }
 
     @Override
     protected BaseViewHolder getViewHolder(ViewGroup parent, int viewType) {
@@ -54,8 +49,13 @@ public class MainFragment extends BaseListFragment<Article> {
     @Override
     public void onRefresh(int action) {
         Log.d("action:" + action);
+        getData();
+    }
+
+    private void getData() {
         Type type = new TypeToken<ApiResponse<List<Article>>>(){}.getType();
         Request<ApiResponse> request2 = new JsonRequest(HttpConfigure.buildArtistUrl(), type);
+        request2.setCancelSign(MainFragment.class);
         CallServer.getInstance().add(getActivity(), 0, request2, new HttpListener<ApiResponse>() {
             @Override
             public void onSuccess(int what, Response<ApiResponse> response) {
@@ -66,8 +66,8 @@ public class MainFragment extends BaseListFragment<Article> {
                     Log.d("" + article.getTitle());
                 }
                 mDataList = articleList;
-                adapter.notifyDataSetChanged();
-                recycler.onRefreshCompleted();
+                mAdapter.notifyDataSetChanged();
+                mRecycler.onRefreshCompleted();
             }
             @Override
             public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
@@ -123,5 +123,11 @@ public class MainFragment extends BaseListFragment<Article> {
             startActivity(intent);
         }
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CallServer.getInstance().cancelBySign(MainFragment.class);
     }
 }

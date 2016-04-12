@@ -38,7 +38,7 @@ public abstract class BaseListActivity<T> extends BaseActivity implements PullRe
         setUpAdapter();
         recycler.setOnRefreshListener(this);
         recycler.setLayoutManager(getLayoutManager());
-        recycler.addItemDecoration(getItemDecoration());
+//        recycler.addItemDecoration(getItemDecoration());//no need item divide
         recycler.setAdapter(adapter);
     }
 

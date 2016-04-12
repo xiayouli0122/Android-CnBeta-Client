@@ -30,6 +30,7 @@ import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.utils.ToastUtil;
+import com.yuri.cnbeta.utils.Utils;
 import com.yuri.cnbeta.view.ui.core.BaseActivity;
 
 import java.lang.reflect.Type;
@@ -81,7 +82,6 @@ public class NewsDetailActivity extends BaseActivity {
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("===============");
                 Intent intent = NewsCommentActivity.getIntent(NewsDetailActivity.this, mContent.getSid());
                 startActivity(intent);
             }
@@ -105,20 +105,18 @@ public class NewsDetailActivity extends BaseActivity {
         mWebview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mWebSetting.setCacheMode(WebSettings.LOAD_DEFAULT);
         mWebSetting.setTextZoom(100);
-        //
 
         mWebview.addJavascriptInterface(new JavaScriptInterface(this), "Interface");
         mWebview.setWebChromeClient(new VideoWebChromeClient());
         mWebview.setWebViewClient(new MyWebViewClient());
 
-//        String url = HttpConfigure.buildArtileUrl("491283");
-//        mWebview.loadUrl(url);
         String contentUrl = HttpConfigure.newsContent(mSID);
         Log.d("contentUrl:" + contentUrl);
 
         Type type = new TypeToken<ApiResponse<Content>>() {}.getType();
 
         Request<ApiResponse> request = new JsonRequest(contentUrl, type);
+        request.setCancelSign(NewsDetailActivity.class);
 
         CallServer.getInstance().add(getApplicationContext(), 1, request, new HttpListener<ApiResponse>() {
             @Override
@@ -139,23 +137,18 @@ public class NewsDetailActivity extends BaseActivity {
 
             }
         }, true);
-
     }
 
     private void bindData() {
         int titleColor = getResources().getColor(R.color.colorPrimary);
         String colorString = Integer.toHexString(titleColor);
-        String add;
-//        if (ThemeManger.isNightTheme(getActivity())) {
-//            add = night;
-//        } else {
-        add = light;
-//        }
+        String theme = light;
         boolean showImage = true;
         boolean convertFlashToHtml5 = true;
+        String date = Utils.getDate(Long.parseLong(mContent.inputtime) * 1000);
         String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()),
-                add, showImage, convertFlashToHtml5, mContent.getTitle(), mContent.getSource(),
-                mContent.inputtime, mContent.getHometext(), mContent.getBodytext());
+                theme, showImage, convertFlashToHtml5, mContent.getTitle(), mContent.getSource(),
+                date, mContent.getHometext(), mContent.getBodytext());
         mWebview.loadDataWithBaseURL(HttpConfigure.BASE_URL, data, "text/html", "utf-8", null);
     }
 
@@ -166,28 +159,27 @@ public class NewsDetailActivity extends BaseActivity {
 
         @Override
         public void onShowCustomView(View view, CustomViewCallback customViewCallback) {
+            Log.d();
             if (myCallback != null) {
                 myCallback.onCustomViewHidden();
                 myCallback = null;
                 return;
             }
             view.setBackgroundColor(Color.BLACK);
-//            onShowHtmlVideoView(view);
+            onShowHtmlVideoView(view);
             myView = view;
             myCallback = customViewCallback;
         }
 
         @Override
         public void onHideCustomView() {
-
+            Log.d();
             if (myView != null) {
-
                 if (myCallback != null) {
                     myCallback.onCustomViewHidden();
                     myCallback = null;
                 }
-
-//                onHideHtmlVideoView(myView);
+                onHideHtmlVideoView(myView);
                 myView = null;
             }
         }
@@ -227,14 +219,14 @@ public class NewsDetailActivity extends BaseActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            System.out.println("MyWebViewClient.onPageFinished");
+            Log.d("url:" + url);
             super.onPageFinished(view, url);
             finish = true;
         }
 
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            System.out.println("MyWebViewClient.shouldInterceptRequest(view,url) url = [" + url + "]");
+            Log.d("url:" + url);
             String prefix = MimeTypeMap.getFileExtensionFromUrl(url);
             if (!TextUtils.isEmpty(prefix)) {
                 String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(prefix);
@@ -310,10 +302,12 @@ public class NewsDetailActivity extends BaseActivity {
 
         JavaScriptInterface(Context c) {
             mContext = c;
+            myHandler = new Handler();
         }
 
         @JavascriptInterface
         public void showImage(String pos, final String[] imageSrcs) {
+            Log.d("pos:" + pos + ",imageSrcs:" + imageSrcs);
             final int posi;
             try {
                 posi = Integer.parseInt(pos);
@@ -333,6 +327,7 @@ public class NewsDetailActivity extends BaseActivity {
 
         @JavascriptInterface
         public void loadSohuVideo(final String hoder_id, final String requestUrl) {
+            Log.d("videoUrl:" + requestUrl);
             myHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -382,5 +377,11 @@ public class NewsDetailActivity extends BaseActivity {
             });
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CallServer.getInstance().cancelBySign(NewsDetailActivity.class);
     }
 }

@@ -12,6 +12,6 @@
         <attr name="centerVertical" format="boolean"/>
         <attr name="centerBottom" format="dimension"/>
         <attr name="sweepAngle" format="integer"/>
-        <attr name="menu" format="reference"/>
+        <attr name="fmenu" format="reference"/>
     </declare-styleable>
 </resources>

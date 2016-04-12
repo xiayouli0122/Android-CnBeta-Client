@@ -22,7 +22,7 @@ public class Utils {
      * @return 当前时间格式化后的字符
      */
     public static String getDate(long time) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(time);
         return format.format(date);
     }
