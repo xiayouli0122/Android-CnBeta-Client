@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.Request;
 import com.yolanda.nohttp.Response;
@@ -37,6 +38,9 @@ public class MainFragment extends BaseListFragment<Article> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (mDataList != null) {
+            mDataList.clear();
+        }
         mRecycler.setRefreshing();
     }
 
@@ -49,6 +53,9 @@ public class MainFragment extends BaseListFragment<Article> {
     @Override
     public void onRefresh(int action) {
         Log.d("action:" + action);
+        if (mDataList != null) {
+            mDataList.clear();
+        }
         getData();
     }
 
@@ -71,7 +78,7 @@ public class MainFragment extends BaseListFragment<Article> {
             }
             @Override
             public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
-
+                mRecycler.onRefreshCompleted();
             }
         }, true);
     }

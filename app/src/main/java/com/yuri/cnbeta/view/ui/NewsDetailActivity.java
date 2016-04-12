@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.JavascriptInterface;
 import android.webkit.MimeTypeMap;
 import android.webkit.WebChromeClient;
@@ -32,6 +33,7 @@ import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.utils.ToastUtil;
 import com.yuri.cnbeta.utils.Utils;
 import com.yuri.cnbeta.view.ui.core.BaseActivity;
+import com.yuri.cnbeta.view.widgets.AVLoadingIndicatorView.AVLoadingIndicatorView;
 
 import java.lang.reflect.Type;
 import java.util.Locale;
@@ -49,6 +51,7 @@ public class NewsDetailActivity extends BaseActivity {
     private WebView mWebview;
     private WebSettings mWebSetting;
     private FloatingActionButton mActionButton;
+    private AVLoadingIndicatorView mLoadingView;
 
     private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}%s</style>" +
@@ -77,6 +80,7 @@ public class NewsDetailActivity extends BaseActivity {
 
     @Override
     protected void setUpView() {
+        mLoadingView = (AVLoadingIndicatorView) findViewById(R.id.loading_view);
         mWebview = (WebView) findViewById(R.id.webview_details);
         mActionButton = (FloatingActionButton) findViewById(R.id.fab);
         mActionButton.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +114,7 @@ public class NewsDetailActivity extends BaseActivity {
         mWebview.setWebChromeClient(new VideoWebChromeClient());
         mWebview.setWebViewClient(new MyWebViewClient());
 
+        mLoadingView.start();
         String contentUrl = HttpConfigure.newsContent(mSID);
         Log.d("contentUrl:" + contentUrl);
 
@@ -122,19 +127,15 @@ public class NewsDetailActivity extends BaseActivity {
             @Override
             public void onSuccess(int what, Response<ApiResponse> response) {
                 ApiResponse<Content> apiResponse = response.get();
-                Log.d(">>" + apiResponse.result.getTitle());
-
                 mContent = apiResponse.result;
-
                 setUpTitle(mContent.getTitle());
-
                 bindData();
             }
 
             @Override
             public void onFailed(int what, String url, Object tag, Exception exception,
                                  int responseCode, long networkMills) {
-
+                mLoadingView.stop();
             }
         }, true);
     }
@@ -150,12 +151,32 @@ public class NewsDetailActivity extends BaseActivity {
                 theme, showImage, convertFlashToHtml5, mContent.getTitle(), mContent.getSource(),
                 date, mContent.getHometext(), mContent.getBodytext());
         mWebview.loadDataWithBaseURL(HttpConfigure.BASE_URL, data, "text/html", "utf-8", null);
+
+        mActionButton.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+//                if (fromDB) {
+//                    try {
+//                        MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
+//                    } catch (DbException ignored) {
+//                    }
+//                }
+                mActionButton.setVisibility(View.VISIBLE);
+                mActionButton.animate()
+                        .scaleX(1)
+                        .scaleY(1)
+                        .setDuration(500)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .start();
+                mLoadingView.stop();
+                mWebview.setVisibility(View.VISIBLE);
+            }
+        }, 200);
     }
 
     class VideoWebChromeClient extends WebChromeClient {
         private View myView = null;
         CustomViewCallback myCallback = null;
-
 
         @Override
         public void onShowCustomView(View view, CustomViewCallback customViewCallback) {

@@ -1,30 +1,42 @@
 package com.yuri.cnbeta.view.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
 import com.yuri.cnbeta.BuildConfig;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.log.Log;
+import com.yuri.cnbeta.utils.FileUtils;
+import com.yuri.cnbeta.utils.ToastUtil;
 import com.yuri.cnbeta.view.widgets.FixViewPager;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -82,25 +94,13 @@ public class ImageActivity extends Activity implements ViewPager.OnPageChangeLis
 
         views = new ArrayList<>(imageSrcs.length);
         mImageItems = new ArrayList<>();
+        ImageView imageView;
+        ProgressBar progressBar;
         for (String url : imageSrcs) {
-            Log.d("url:" + url);
-            FrameLayout view = new FrameLayout(this);
-            //View view = LayoutInflater.from(this).inflate(R.layout.image_item, pager, false);
-            ImageView imageView = new ImageView(this);
-            FrameLayout.LayoutParams pvparams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            imageView.setLayoutParams(pvparams);
-            view.addView(imageView);
-//            ProgressWheel progress = new ProgressWheel(this);
-//            progress.setRimWidth(width);
-//            progress.setBarWidth(width);
-//            progress.setBarColor(Color.parseColor("#fff0f4e2"));
-//            progress.setRimColor(Color.parseColor("#44000000"));
-//            FrameLayout.LayoutParams pgparams = new FrameLayout.LayoutParams(progressWidth, progressWidth);
-//            pgparams.gravity = Gravity.CENTER;
-//            progress.setLayoutParams(pgparams);
-//            progress.spin();
-//            view.addView(progress);
-            mImageItems.add(new ImageItem(url, imageView));
+            View view = LayoutInflater.from(this).inflate(R.layout.layout_image_item, mFixViewPager, false);
+            imageView = (ImageView) view.findViewById(R.id.image_item_iv);
+            progressBar = (ProgressBar) view.findViewById(R.id.image_item_bar);
+            mImageItems.add(new ImageItem(url, imageView, progressBar));
             views.add(view);
         }
 
@@ -192,27 +192,29 @@ public class ImageActivity extends Activity implements ViewPager.OnPageChangeLis
                 .addItem(R.mipmap.ic_reflush)
                 .withListener(new FilterMenu.OnMenuChangeListener() {
                     @Override
-                    public void onMenuItemClick(View view, int position) {
-//                        if (position != 2) {
-//                            String image_url = imageSrcs[mFixViewPager.getCurrentItem()];
-//                            //UIL
-//                            Glide.with(ImageActivity.class).load(image_url).downloadOnly();
-//                            File imageFile = ImageLoader.getInstance().getDiskCache().get(image_url);
-//                            if (imageFile != null) {
-//                                switch (position) {
-//                                    case 0:
-//                                        saveImage(image_url, imageFile);
-//                                        break;
-//                                    case 1:
-//                                        shareImage(image_url, imageFile);
-//                                        break;
-//                                }
-//                            } else {
-//                                Toast.makeText(ImageViewActivity.this, "图片还未下载完成", Toast.LENGTH_SHORT).show();
-//                            }
-//                        } else {
-//                            mImageItems.get(pager.getCurrentItem()).displayImage(true);
-//                        }
+                    public void onMenuItemClick(View view, final int position) {
+                        if (position != 2) {
+                            final String image_url = imageSrcs[mFixViewPager.getCurrentItem()];
+                            //UIL
+                            Log.d("start loading");
+                            DrawableTypeRequest builder = Glide.with(ImageActivity.this).load(image_url);
+                            builder.downloadOnly(new SimpleTarget<File>() {
+                                @Override
+                                public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation) {
+                                    Log.d(">>>" + resource.getAbsolutePath());
+                                    switch (position) {
+                                        case 0:
+                                            saveImage(image_url, resource);
+                                            break;
+                                        case 1:
+                                            shareImage(image_url, resource);
+                                            break;
+                                    }
+                                }
+                            });
+                        } else {
+                            mImageItems.get(mFixViewPager.getCurrentItem()).displayImage(true);
+                        }
                     }
 
                     @Override
@@ -229,6 +231,46 @@ public class ImageActivity extends Activity implements ViewPager.OnPageChangeLis
                 .build();
     }
 
+    private void saveImage(String imageUrl, File imageFile) {
+        String dirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/cnBeta";
+        File dirFile = new File(dirPath);
+        if (!dirFile.exists()) {
+            if (!dirFile.mkdir()) {
+                ToastUtil.showToast(getApplicationContext(), "保存图片失败");
+                return;
+            }
+        }
+
+        String path = dirPath + "/" + Uri.parse(imageUrl).getLastPathSegment();
+
+        Log.d("path:" + path);
+        File desFile = new File(path);
+        try {
+            if (!desFile.exists()) {
+                boolean result = desFile.createNewFile();
+                if (!result) {
+                    ToastUtil.showToast(getApplicationContext(), "保存图片失败");
+                    return;
+                }
+            }
+            FileUtils.copy(imageFile, desFile);
+            ToastUtil.showToast(getApplicationContext(), String.format(Locale.CHINA, "保存成功 文件路径：%s", path));
+        } catch (IOException e) {
+            e.printStackTrace();
+            ToastUtil.showToast(getApplicationContext(), "保存图片失败");
+            return;
+        }
+        //保存到媒体库中
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+    }
+
+    private void shareImage(String imageUrl, File imageFile) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(imageFile));
+        shareIntent.setType("image/jpeg");
+        startActivity(Intent.createChooser(shareIntent, "分享图片"));
+    }
+
     class ImageItem {
         public final int NOTSHOW = 0;
         public final int SHOWING = 1;
@@ -239,26 +281,29 @@ public class ImageActivity extends Activity implements ViewPager.OnPageChangeLis
         private ProgressBar progress;
         private int showStatus = NOTSHOW;
 
-        public ImageItem(String imageSrc, ImageView imageview) {
+        public ImageItem(String imageSrc, ImageView imageview, ProgressBar progressBar) {
             this.imageSrc = imageSrc;
             this.imageview = imageview;
-//            this.progress = progress;
+            this.progress = progressBar;
             this.showStatus = NOTSHOW;
         }
 
         public void displayImage(boolean current) {
             if (showStatus == NOTSHOW || showStatus == SHOWFAILURE) {
+                progress.setVisibility(View.VISIBLE);
                 Glide.with(ImageActivity.this)
                         .load(Uri.parse(imageSrc))
                         .listener(new RequestListener<Uri, GlideDrawable>() {
                             @Override
                             public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                progress.setVisibility(View.GONE);
                                 showStatus = SHOWFAILURE;
                                 return false;
                             }
 
                             @Override
                             public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                progress.setVisibility(View.GONE);
                                 showStatus = SHOWSUCCESS;
                                 return false;
                             }
