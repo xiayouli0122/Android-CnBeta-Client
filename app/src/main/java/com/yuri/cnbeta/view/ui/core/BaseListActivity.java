@@ -2,6 +2,7 @@ package com.yuri.cnbeta.view.ui.core;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.view.adapter.BaseListAdapter;
@@ -22,6 +23,7 @@ public abstract class BaseListActivity<T> extends BaseActivity implements PullRe
     protected BaseListAdapter adapter;
     protected ArrayList<T> mDataList;
     protected PullRecycler recycler;
+    protected TextView mEmptyViewTV;
 
     @Override
     protected void setUpContentView() {
@@ -31,6 +33,7 @@ public abstract class BaseListActivity<T> extends BaseActivity implements PullRe
     @Override
     protected void setUpView() {
         recycler = (PullRecycler) findViewById(R.id.pullRecycler);
+        mEmptyViewTV = (TextView) findViewById(R.id.list_empty_tv);
     }
 
     @Override
