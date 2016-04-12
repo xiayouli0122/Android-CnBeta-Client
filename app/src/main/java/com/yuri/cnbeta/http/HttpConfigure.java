@@ -31,10 +31,14 @@ public class HttpConfigure {
     private static final String NEWS_LISTS = "Article.Lists";
     private static final String NEWS_CONTENT = "Article.NewsContent";
     private static final String NEWS_COMMENT = "Article.Comment";
+    private static final String DO_COMMENT = "Article.DoCmt";
 
     private static final String KEY_SID = "sid";
     private static final String KEY_PAGE = "page";
     private static final String KEY_PAGE_SIZE = "pageSize";
+    private static final String KEY_PID = "pid";
+    private static final String KEY_OP = "op";
+    private static final String KEY_TID = "tid";
 
     private static final String ARTICLE_URL = BASE_URL + "/articles/%s.htm";
 
@@ -49,6 +53,29 @@ public class HttpConfigure {
         map.put("v", V);
         map.put("timestamp", String.valueOf(System.currentTimeMillis()));
         return map;
+    }
+
+    public static String voteComment(String op, String sid, String tid) {
+        Map<String, String> paramMap = initParamMap();
+        paramMap.put(KEY_METHOD, DO_COMMENT);
+        paramMap.put(KEY_OP, op);
+        paramMap.put(KEY_SID, sid);
+        paramMap.put(KEY_TID, tid);
+        return buildUrl(paramMap);
+    }
+
+    public static String writeComment(String sid, String pid) {
+        Map<String, String> paramMap = initParamMap();
+        paramMap.put(KEY_METHOD, DO_COMMENT);
+        paramMap.put(KEY_SID, sid);
+        paramMap.put("content", "oooooooo");
+        /**
+         * null pid means publish a comment,NOT null means reply a comment
+         */
+        if (pid != null) {
+            paramMap.put(KEY_PID, pid);
+        }
+        return buildUrl(paramMap);
     }
 
     public static String newsComment(String page, String sid) {

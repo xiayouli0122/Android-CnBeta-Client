@@ -145,7 +145,7 @@ public class NewsDetailActivity extends BaseActivity {
         String colorString = Integer.toHexString(titleColor);
         String theme = light;
         boolean showImage = true;
-        boolean convertFlashToHtml5 = true;
+        boolean convertFlashToHtml5 = false;
         String date = Utils.getDate(Long.parseLong(mContent.inputtime) * 1000);
         String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()),
                 theme, showImage, convertFlashToHtml5, mContent.getTitle(), mContent.getSource(),

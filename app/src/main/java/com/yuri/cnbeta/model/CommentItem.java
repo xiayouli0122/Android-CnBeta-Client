@@ -7,6 +7,7 @@ import com.yuri.cnbeta.http.response.Comment;
  */
 public class CommentItem {
 
+    public String sid;
     /**
      * id of this Comment
      */

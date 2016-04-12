@@ -8,11 +8,23 @@ import android.widget.BaseAdapter;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.google.gson.internal.Streams;
+import com.google.gson.reflect.TypeToken;
+import com.yolanda.nohttp.Request;
+import com.yolanda.nohttp.Response;
 import com.yuri.cnbeta.R;
+import com.yuri.cnbeta.http.CallServer;
+import com.yuri.cnbeta.http.HttpConfigure;
+import com.yuri.cnbeta.http.HttpListener;
+import com.yuri.cnbeta.http.request.JsonRequest;
+import com.yuri.cnbeta.http.response.ApiResponse;
+import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.CommentItem;
 import com.yuri.cnbeta.view.adapter.BaseListAdapter;
 
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 
 public class ExtendPopMenu extends PopupMenu {
     public int SUPPORT = 1;
@@ -33,24 +45,85 @@ public class ExtendPopMenu extends PopupMenu {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.comment_support:
+                        Log.d("support");
                         action = SUPPORT;
+                        Type type = new TypeToken<ApiResponse<String>>() {}.getType();
+                        String supportUrl = HttpConfigure.voteComment("support", commentItem.sid, commentItem.tid);
+                        //against
+                        final Request<ApiResponse> request = new JsonRequest(supportUrl, type);
+                        CallServer.getInstance().add(mContext, 0, request, new HttpListener<ApiResponse>() {
+                            @Override
+                            public void onSuccess(int what, Response<ApiResponse> response) {
+                                ApiResponse<String> apiResponse = response.get();
+                                Log.d(apiResponse.result);
+                            }
+
+                            @Override
+                            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
+
+                            }
+                        }, true);
 //                        NetKit.getInstance().setCommentAction("support", commentItem.getSid()+"", commentItem.getTid(), token, chandler);
                         break;
                     case R.id.comment_against:
+                        Log.d("against");
                         action = AGAINST;
-//                        NetKit.getInstance().setCommentAction("against", commentItem.getSid()+"", commentItem.getTid(), token, chandler);
+                        Type type1 = new TypeToken<ApiResponse<String>>() {}.getType();
+                        String againstUrl = HttpConfigure.voteComment("against", commentItem.sid, commentItem.tid);
+                        //against
+                        final Request<ApiResponse> request1 = new JsonRequest(againstUrl, type1);
+                        CallServer.getInstance().add(mContext, 0, request1, new HttpListener<ApiResponse>() {
+                            @Override
+                            public void onSuccess(int what, Response<ApiResponse> response) {
+                                ApiResponse<String> apiResponse = response.get();
+                                Log.d(apiResponse.result);
+                            }
+
+                            @Override
+                            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
+
+                            }
+                        }, true);
                         break;
                     case R.id.comment_report:
                         action = REPORT;
-//                        NetKit.getInstance().setCommentAction("report", commentItem.getSid()+"", commentItem.getTid(), token, chandler);
+                        Log.d("report");
+                        //举报
+                        Type type2 = new TypeToken<ApiResponse<String>>() {}.getType();
+                        String reporttUrl = HttpConfigure.voteComment("report", commentItem.sid, commentItem.tid);
+                        //against
+                        final Request<ApiResponse> request2 = new JsonRequest(reporttUrl, type2);
+                        CallServer.getInstance().add(mContext, 0, request2, new HttpListener<ApiResponse>() {
+                            @Override
+                            public void onSuccess(int what, Response<ApiResponse> response) {
+                                ApiResponse<String> apiResponse = response.get();
+                                Log.d(apiResponse.result);
+                            }
+
+                            @Override
+                            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
+
+                            }
+                        }, true);
                         break;
                     case R.id.comment_replay:
-//                        if(mContext instanceof Activity) {
-//                            AddNewCommentFragment fragment = AddNewCommentFragment.getInstance(commentItem.getSid(), commentItem.getTid(), token);
-//                            fragment.show(((Activity) mContext).getFragmentManager(), "new comment");
-//                        }else{
-//                            Toast.makeText(mContext,"function not impletment", Toast.LENGTH_SHORT).show();
-//                        }
+                        Log.d("reply");
+                        //回复还没实现
+//                        Type type3 = new TypeToken<ApiResponse<String>>() {}.getType();
+//                        String writeCommentUrl = HttpConfigure.writeComment(commentItem.sid, commentItem.pid);
+//                        final Request<ApiResponse> request3 = new JsonRequest(writeCommentUrl, type3);
+//                        CallServer.getInstance().add(mContext, 0, request3, new HttpListener<ApiResponse>() {
+//                            @Override
+//                            public void onSuccess(int what, Response<ApiResponse> response) {
+//                                ApiResponse<String> apiResponse = response.get();
+//                                Log.d(apiResponse.result);
+//                            }
+//
+//                            @Override
+//                            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
+//
+//                            }
+//                        }, true);
                         break;
                 }
                 return true;
@@ -58,38 +131,6 @@ public class ExtendPopMenu extends PopupMenu {
         });
 
     }
-
-//    private JsonHttpResponseHandler chandler = new JsonHttpResponseHandler() {
-//        @Override
-//        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//            Toast.makeText(mContext, "操作失败", Toast.LENGTH_LONG).show();
-//            throwable.printStackTrace();
-//        }
-//
-//        @Override
-//        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//            try {
-//                if ("success".equals(response.getString("state"))) {
-//                    String actionString;
-//                    if (action == SUPPORT) {
-//                        actionString = "支持";
-//                        commentItem.setScore(commentItem.getScore() + 1);
-//                    } else if (action == AGAINST) {
-//                        actionString = "反对";
-//                        commentItem.setReason(commentItem.getReason() + 1);
-//                    } else {
-//                        actionString = "举报";
-//                    }
-//                    adapter.notifyDataSetChanged();
-//                    Toast.makeText(mContext, actionString + "成功", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    throw new Exception();
-//                }
-//            } catch (Exception e) {
-//                onFailure(statusCode, headers, e, response);
-//            }
-//        }
-//    };
 
     public void setCommentItem(CommentItem commentItem) {
         this.commentItem = commentItem;

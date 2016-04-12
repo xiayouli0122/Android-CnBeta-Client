@@ -69,9 +69,9 @@ public class MainFragment extends BaseListFragment<Article> {
                 ApiResponse<List<Article>> apiResponse = response.get();
                 Log.d("status:" + apiResponse.status);
                 List<Article> articleList = apiResponse.result;
-                for (Article article : articleList) {
-                    Log.d("" + article.getTitle());
-                }
+//                for (Article article : articleList) {
+//                    Log.d("" + article.getTitle());
+//                }
                 mDataList = articleList;
                 mAdapter.notifyDataSetChanged();
                 mRecycler.onRefreshCompleted();

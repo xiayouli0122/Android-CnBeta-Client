@@ -2,6 +2,7 @@ package com.yuri.cnbeta.view.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,6 +111,7 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> {
 
                             commentItem = new CommentItem();
                             commentItem.copy(comment);
+                            commentItem.sid = mSID;
                             Comment parent = store.get(comment.getPid());
                             while (parent != null) {
                                 sb.append("//@");
@@ -203,7 +205,7 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> {
             } else {
                 mParentContent.setText(commentItem.parentComment);
             }
-            mContentView.setText(commentItem.content);
+            mContentView.setText(Html.fromHtml(commentItem.content).toString());
             mAgainstView.setText(commentItem.against);
             mSupportView.setText(commentItem.support);
             mDateView.setText(commentItem.createdTime);
