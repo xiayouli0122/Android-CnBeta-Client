@@ -18,7 +18,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.Request;
 import com.yolanda.nohttp.Response;
@@ -26,23 +25,24 @@ import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.http.CallServer;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
-import com.yuri.cnbeta.http.request.JsonRequest;
-import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.http.response.Content;
+import com.yuri.cnbeta.presenter.NewsDetailPresenter;
 import com.yuri.cnbeta.utils.ToastUtil;
 import com.yuri.cnbeta.utils.Utils;
+import com.yuri.cnbeta.view.INewsDetailView;
 import com.yuri.cnbeta.view.ui.core.BaseActivity;
 import com.yuri.cnbeta.view.widgets.AVLoadingIndicatorView.AVLoadingIndicatorView;
 
-import java.lang.reflect.Type;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
 /**
+ *  <t>新闻详情Activity</t>
+ *  <p>从cnbeta服务器api接口中获取指定新闻的数据详情，然后根据web页面模板动态生成一个web页面显示在webview上</p>
  * Created by Yuri on 2016/4/11.
  */
-public class NewsDetailActivity extends BaseActivity {
+public class NewsDetailActivity extends BaseActivity implements INewsDetailView {
 
     public static final String EXTRA_SID = "extra_sid";
 
@@ -53,7 +53,7 @@ public class NewsDetailActivity extends BaseActivity {
     private FloatingActionButton mActionButton;
     private AVLoadingIndicatorView mLoadingView;
 
-    private String webTemplate = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
+    private static final String WEB_TEMPLATE = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}%s</style>" +
             "<script>var config = {\"enableImage\":%s,\"enableFlashToHtml5\":%s};</script>" +
             "<script src=\"file:///android_asset/BaseTool.js\"></script>" +
@@ -61,10 +61,12 @@ public class NewsDetailActivity extends BaseActivity {
             "<script src=\"file:///android_asset/VideoTool.js\"></script></head>" +
             "<body><div><div class=\"title\">%s</div><div class=\"from\">%s<span style=\"float: right\">%s</span></div><div id=\"introduce\">%s<div class=\"clear\"></div></div><div id=\"content\">%s</div><div class=\"clear foot\">-- The End --</div></div>" +
             "<script src=\"file:///android_asset/loder.js\"></script></body></html>";
-    private String night = "body{color:#9bafcb}#introduce{background-color:#262f3d;color:#616d80}.content blockquote{background-color:#262f3d;color:#616d80}";
-    private String light = "#introduce{background-color:#F1F1F1;color: #444;}";
+    private static String NIGHT = "body{color:#9bafcb}#introduce{background-color:#262f3d;color:#616d80}.content blockquote{background-color:#262f3d;color:#616d80}";
+    private static String LIGHT = "#introduce{background-color:#F1F1F1;color: #444;}";
 
     private Content mContent;
+
+    private NewsDetailPresenter mPresenter;
 
     public static Intent getIntent(Context context, String sid) {
         Intent intent = new Intent();
@@ -95,6 +97,8 @@ public class NewsDetailActivity extends BaseActivity {
     @Override
     protected void setUpData() {
 
+        mPresenter = new NewsDetailPresenter(getApplicationContext(), this);
+
         mSID = getIntent().getStringExtra(EXTRA_SID);
         Log.d("sid:" + mSID);
 
@@ -115,39 +119,19 @@ public class NewsDetailActivity extends BaseActivity {
         mWebview.setWebViewClient(new MyWebViewClient());
 
         mLoadingView.start();
-        String contentUrl = HttpConfigure.newsContent(mSID);
-        Log.d("contentUrl:" + contentUrl);
 
-        Type type = new TypeToken<ApiResponse<Content>>() {}.getType();
 
-        Request<ApiResponse> request = new JsonRequest(contentUrl, type);
-        request.setCancelSign(NewsDetailActivity.class);
-
-        CallServer.getInstance().add(getApplicationContext(), 1, request, new HttpListener<ApiResponse>() {
-            @Override
-            public void onSuccess(int what, Response<ApiResponse> response) {
-                ApiResponse<Content> apiResponse = response.get();
-                mContent = apiResponse.result;
-                setUpTitle(mContent.getTitle());
-                bindData();
-            }
-
-            @Override
-            public void onFailed(int what, String url, Object tag, Exception exception,
-                                 int responseCode, long networkMills) {
-                mLoadingView.stop();
-            }
-        }, true);
+        mPresenter.getData(mSID);
     }
 
     private void bindData() {
         int titleColor = getResources().getColor(R.color.colorPrimary);
         String colorString = Integer.toHexString(titleColor);
-        String theme = light;
+        String theme = LIGHT;
         boolean showImage = true;
         boolean convertFlashToHtml5 = false;
         String date = Utils.getDate(Long.parseLong(mContent.inputtime) * 1000);
-        String data = String.format(Locale.CHINA, webTemplate, colorString.substring(2, colorString.length()),
+        String data = String.format(Locale.CHINA, WEB_TEMPLATE, colorString.substring(2, colorString.length()),
                 theme, showImage, convertFlashToHtml5, mContent.getTitle(), mContent.getSource(),
                 date, mContent.getHometext(), mContent.getBodytext());
         mWebview.loadDataWithBaseURL(HttpConfigure.BASE_URL, data, "text/html", "utf-8", null);
@@ -155,12 +139,6 @@ public class NewsDetailActivity extends BaseActivity {
         mActionButton.postDelayed(new Runnable() {
             @Override
             public void run() {
-//                if (fromDB) {
-//                    try {
-//                        MyApplication.getInstance().getDbUtils().saveOrUpdate(mNewsItem);
-//                    } catch (DbException ignored) {
-//                    }
-//                }
                 mActionButton.setVisibility(View.VISIBLE);
                 mActionButton.animate()
                         .scaleX(1)
@@ -172,6 +150,18 @@ public class NewsDetailActivity extends BaseActivity {
                 mWebview.setVisibility(View.VISIBLE);
             }
         }, 200);
+    }
+
+    @Override
+    public void showData(Content content) {
+        mContent = content;
+        setUpTitle(mContent.getTitle());
+        bindData();
+    }
+
+    @Override
+    public void showError(String message) {
+        Log.d(message);
     }
 
     class VideoWebChromeClient extends WebChromeClient {
@@ -252,40 +242,6 @@ public class NewsDetailActivity extends BaseActivity {
             if (!TextUtils.isEmpty(prefix)) {
                 String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(prefix);
                 if (mimeType != null && mimeType.startsWith("image")) {
-                    boolean showImage = true;
-                    if (finish || showImage) {
-//                        Glide.with(NewsDetailActivity.this)
-//                                .load(Uri.parse(url))
-//                                .asBitmap()
-//                                .into(new SimpleTarget<Bitmap>() {
-//                                    @Override
-//                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//
-//                                    }
-//                                });
-//                        FutureTarget<File> futureTarget = Glide.with(NewsDetailActivity.this)
-//                                .load(Uri.parse(url))
-//                                .downloadOnly(100, 100);
-//                        File image = ImageLoader.getInstance().getDiskCache().get(url);
-//                        if (image != null) {
-//                            System.out.println("load Image From disk cache");
-//                            try {
-//                                return new WebResourceResponse(mimeType, "UTF-8", new FileInputStream(image));
-//                            } catch (FileNotFoundException ignored) {
-//                            }
-//                        } else {
-//                            System.out.println("load Image From net");
-//                        }
-//                    } else {
-//                        System.out.println("Load Image Hoder");
-//                        try {
-//                            return new WebResourceResponse("image/svg+xml", "UTF-8", mActivity.getAssets().open("image.svg"));
-//                        } catch (IOException ignored) {
-//                        }
-//                    }
-                    } else {
-                        System.out.println("load other resourse");
-                    }
                 }
             }
             return super.shouldInterceptRequest(view, url);
@@ -293,28 +249,9 @@ public class NewsDetailActivity extends BaseActivity {
     }
 
     private void onShowHtmlVideoView(View html5VideoView) {
-
-//        if (callBack != null) {
-//            callBack.onVideoFullScreen(true);
-//            callBack.onShowHtmlVideoView(html5VideoView);
-//        } else {
-//            ViewGroup parent = (ViewGroup) mActivity.findViewById(R.id.content);
-//            parent.addView(html5VideoView);
-//        }
-//        mWebView.setVisibility(View.GONE);
-//        mActionButtom.setVisibility(View.GONE);
     }
 
     private void onHideHtmlVideoView(View html5VideoView) {
-//        if (callBack != null) {
-//            callBack.onVideoFullScreen(false);
-//            callBack.onHideHtmlVideoView(html5VideoView);
-//        } else {
-//            ViewGroup parent = (ViewGroup) mActivity.findViewById(R.id.content);
-//            parent.removeView(html5VideoView);
-//        }
-//        mWebView.setVisibility(View.VISIBLE);
-//        mActionButtom.setVisibility(View.VISIBLE);
     }
 
     private class JavaScriptInterface {
@@ -403,6 +340,7 @@ public class NewsDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CallServer.getInstance().cancelBySign(NewsDetailActivity.class);
+        mPresenter.cancelRequestBySign(NewsDetailActivity.class);
+        mPresenter = null;
     }
 }

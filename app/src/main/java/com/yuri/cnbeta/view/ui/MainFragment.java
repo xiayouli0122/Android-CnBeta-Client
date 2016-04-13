@@ -21,6 +21,8 @@ import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.log.Log;
+import com.yuri.cnbeta.presenter.MainFragmentPresenter;
+import com.yuri.cnbeta.view.IMainFragmentView;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.core.BaseListFragment;
 
@@ -33,7 +35,15 @@ import butterknife.ButterKnife;
 /**
  * Created by Yuri on 2016/4/7.
  */
-public class MainFragment extends BaseListFragment<Article> {
+public class MainFragment extends BaseListFragment<Article> implements IMainFragmentView {
+
+    private MainFragmentPresenter mPresenter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPresenter = new MainFragmentPresenter(getActivity(), this);
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -41,6 +51,7 @@ public class MainFragment extends BaseListFragment<Article> {
         if (mDataList != null) {
             mDataList.clear();
         }
+        //启动自动刷新
         mRecycler.setRefreshing();
     }
 
@@ -53,36 +64,26 @@ public class MainFragment extends BaseListFragment<Article> {
     @Override
     public void onRefresh(int action) {
         Log.d("action:" + action);
-        if (mDataList != null) {
+        //交给Presenter去实现数据获取操作
+        mPresenter.getData();
+    }
+
+    @Override
+    public void showData(List<Article> articleList) {
+        Log.d("" + articleList.size());
+        if (mDataList != null && mDataList.size() > 0) {
             mDataList.clear();
         }
-        getData();
+        mDataList = articleList;
+        mAdapter.notifyDataSetChanged();
+        mRecycler.onRefreshCompleted();
     }
 
-    private void getData() {
-        Type type = new TypeToken<ApiResponse<List<Article>>>(){}.getType();
-        Request<ApiResponse> request2 = new JsonRequest(HttpConfigure.buildArtistUrl(), type);
-        request2.setCancelSign(MainFragment.class);
-        CallServer.getInstance().add(getActivity(), 0, request2, new HttpListener<ApiResponse>() {
-            @Override
-            public void onSuccess(int what, Response<ApiResponse> response) {
-                ApiResponse<List<Article>> apiResponse = response.get();
-                Log.d("status:" + apiResponse.status);
-                List<Article> articleList = apiResponse.result;
-//                for (Article article : articleList) {
-//                    Log.d("" + article.getTitle());
-//                }
-                mDataList = articleList;
-                mAdapter.notifyDataSetChanged();
-                mRecycler.onRefreshCompleted();
-            }
-            @Override
-            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
-                mRecycler.onRefreshCompleted();
-            }
-        }, true);
+    @Override
+    public void showError(String message) {
+        mRecycler.onRefreshCompleted();
+        Log.d(message);
     }
-
 
     class SampleViewHolder extends BaseViewHolder {
 
@@ -135,6 +136,6 @@ public class MainFragment extends BaseListFragment<Article> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        CallServer.getInstance().cancelBySign(MainFragment.class);
+        mPresenter.cancelRequestBySign(MainFragment.class);
     }
 }
