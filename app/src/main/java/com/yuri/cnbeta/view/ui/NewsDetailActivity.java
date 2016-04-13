@@ -3,11 +3,13 @@ package com.yuri.cnbeta.view.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.JavascriptInterface;
@@ -18,6 +20,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.Request;
 import com.yolanda.nohttp.Response;
@@ -45,8 +52,10 @@ import java.util.regex.Matcher;
 public class NewsDetailActivity extends BaseActivity implements INewsDetailView {
 
     public static final String EXTRA_SID = "extra_sid";
+    public static final String EXTRA_TOPIC_LOGO = "extra_topic_logo";
 
     private String mSID;
+    private String mTopicLogoUrl;
 
     private WebView mWebview;
     private WebSettings mWebSetting;
@@ -68,16 +77,18 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
 
     private NewsDetailPresenter mPresenter;
 
-    public static Intent getIntent(Context context, String sid) {
+    public static Intent getIntent(Context context, String sid, String topicLogo) {
         Intent intent = new Intent();
         intent.setClass(context, NewsDetailActivity.class);
         intent.putExtra(EXTRA_SID, sid);
+        intent.putExtra(EXTRA_TOPIC_LOGO, topicLogo);
         return intent;
     }
 
     @Override
     protected void setUpContentView() {
         setContentView(R.layout.activity_news_detail);
+        setUpMenu(R.menu.news_detail);
     }
 
     @Override
@@ -100,6 +111,7 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
         mPresenter = new NewsDetailPresenter(getApplicationContext(), this);
 
         mSID = getIntent().getStringExtra(EXTRA_SID);
+        mTopicLogoUrl = getIntent().getStringExtra(EXTRA_TOPIC_LOGO);
         Log.d("sid:" + mSID);
 
         mWebSetting = mWebview.getSettings();
@@ -164,6 +176,53 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
         Log.d(message);
     }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
+                        {
+                                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.SINA,
+                                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
+                        };
+                UMImage umImage = new UMImage(this, mTopicLogoUrl);
+                new ShareAction(this).setDisplayList( displaylist )
+                        .withText("分享自帅的不要不要的iPhone7土豪金")
+                        .withTitle(mContent.getTitle())
+                        .withTargetUrl(HttpConfigure.buildArtileUrl(mContent.getSid()))
+                        .withMedia(umImage)
+                        .setCallback(new UMShareListener() {
+                            @Override
+                            public void onResult(SHARE_MEDIA share_media) {
+                                Log.d("" + share_media.name());
+                            }
+
+                            @Override
+                            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                                throwable.printStackTrace();
+                                Log.d("" + share_media.name());
+                            }
+
+                            @Override
+                            public void onCancel(SHARE_MEDIA share_media) {
+                                Log.d("" + share_media.name());
+                            }
+                        })
+                        .open();
+                break;
+            case R.id.action_favorite:
+                break;
+            case R.id.action_view_in_browser:
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse(HttpConfigure.buildArtileUrl(mContent.getSid())));
+                startActivity(intent);
+                break;
+        }
+        return super.onMenuItemClick(item);
+    }
+
     class VideoWebChromeClient extends WebChromeClient {
         private View myView = null;
         CustomViewCallback myCallback = null;
@@ -212,7 +271,7 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
                 Intent intent;
                 Matcher sidMatcher = HttpConfigure.ARTICLE_PATTERN.matcher(url);
                 if (sidMatcher.find()) {
-                    intent = NewsDetailActivity.getIntent(NewsDetailActivity.this, mContent.getSid());
+                    intent = NewsDetailActivity.getIntent(NewsDetailActivity.this, mContent.getSid(), "");
                     startActivity(intent);
                     finish();
                 } else {
@@ -335,6 +394,13 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
             });
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //QQ，QQZONE分享需要增加这个代码，否则无法分享成功
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  */
 public class HttpConfigure {
 
-    public static final String BASE_URL = "http://www.cnbeta.com/";
+    public static final String BASE_URL = "http://www.cnbeta.com";
 
     public static final String NEWS_LIST_URL = BASE_URL + "more";
 
@@ -95,12 +95,9 @@ public class HttpConfigure {
         return url;
     }
 
-//    public static String buildArtileUrl(String sid) {
-////        return String.format(Locale.CHINA, ARTICLE_URL, sid);
-//        Map<String, String> paramMap = initParamMap();
-//        paramMap.put(KEY_METHOD, NEWS_CONTENT);
-//        paramMap.put(KEY_SID, sid);
-//    }
+    public static String buildArtileUrl(String sid) {
+        return String.format(Locale.CHINA, ARTICLE_URL, sid);
+    }
 
     public static String buildArtistUrl() {
         Map<String, String> paramMap = initParamMap();

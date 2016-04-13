@@ -46,11 +46,11 @@ public abstract class BaseListFragment<T> extends BaseFragment implements PullRe
     }
 
     protected ILayoutManager getLayoutManager() {
-        return new MyLinearLayoutManager(getContext());
+        return new MyLinearLayoutManager(getActivity().getApplicationContext());
     }
 
     protected RecyclerView.ItemDecoration getItemDecoration() {
-        return new DividerItemDecoration(getContext(), R.drawable.list_divider);
+        return new DividerItemDecoration(getActivity().getApplicationContext(), R.drawable.list_divider);
     }
 
     public class ListAdapter extends BaseListAdapter {

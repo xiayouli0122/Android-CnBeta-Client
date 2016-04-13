@@ -9,16 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.reflect.TypeToken;
-import com.yolanda.nohttp.Request;
-import com.yolanda.nohttp.Response;
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.http.CallServer;
-import com.yuri.cnbeta.http.HttpConfigure;
-import com.yuri.cnbeta.http.HttpListener;
-import com.yuri.cnbeta.http.request.JsonRequest;
-import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.presenter.MainFragmentPresenter;
@@ -26,7 +17,6 @@ import com.yuri.cnbeta.view.IMainFragmentView;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.core.BaseListFragment;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 import butterknife.Bind;
@@ -127,7 +117,7 @@ public class MainFragment extends BaseListFragment<Article> implements IMainFrag
             Article article = mDataList.get(position);
             Log.d("" + article.getSid());
 
-            Intent intent = NewsDetailActivity.getIntent(getActivity(), article.getSid());
+            Intent intent = NewsDetailActivity.getIntent(getActivity(), article.getSid(), article.getTopicLogo());
             startActivity(intent);
         }
 
