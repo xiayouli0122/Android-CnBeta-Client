@@ -2,6 +2,7 @@ package com.yuri.cnbeta.view.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,12 +20,18 @@ import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
 import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
+import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.http.response.Comment;
 import com.yuri.cnbeta.model.CommentItem;
+import com.yuri.cnbeta.presenter.NewsCommentPresenter;
+import com.yuri.cnbeta.presenter.NewsDetailPresenter;
+import com.yuri.cnbeta.view.INewsCommentView;
+import com.yuri.cnbeta.view.INewsDetailView;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.core.BaseListActivity;
 import com.yuri.cnbeta.view.widgets.ExtendPopMenu;
+import com.yuri.cnbeta.view.widgets.PullRecycler;
 import com.yuri.cnbeta.view.widgets.textdrawable.TextDrawable;
 import com.yuri.cnbeta.view.widgets.textdrawable.util.ColorGenerator;
 
@@ -40,12 +47,14 @@ import butterknife.OnClick;
 /**
  * Created by Yuri on 2016/4/11.
  */
-public class NewsCommentActivity extends BaseListActivity<CommentItem> {
+public class NewsCommentActivity extends BaseListActivity<CommentItem> implements INewsCommentView {
 
     public static final String EXTRA_SID = "extra_sid";
 
     private String mSID;
     private int mPage = 0;
+
+    private NewsCommentPresenter mPresenter;
 
     public static Intent getIntent(Context context, String sid) {
         Intent intent = new Intent();
@@ -57,12 +66,14 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> {
     @Override
     protected void setUpData() {
         super.setUpData();
+
+        mPresenter = new NewsCommentPresenter(getApplicationContext(), this);
+
         mSID = getIntent().getStringExtra(EXTRA_SID);
         Log.d("sID：" + mSID);
 
         setUpTitle("评论");
         recycler.setRefreshing();
-
     }
 
     @Override
@@ -73,77 +84,35 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> {
 
     @Override
     public void onRefresh(int action) {
-        getData();
+        switch (action) {
+            case PullRecycler.ACTION_IDLE:
+            case PullRecycler.ACTION_PULL_TO_REFRESH:
+                mPage = 0;//下拉刷新从第一页开始加载
+                break;
+            case PullRecycler.ACTION_LOAD_MORE_REFRESH:
+                mPage ++;
+                break;
+        }
+        mPresenter.getNewsComment(mPage, mSID);
     }
 
-    private void getData() {
-        final String commentUrl = HttpConfigure.newsComment(mPage + "", mSID);
-        Log.d("commentUrl:" + commentUrl);
-        Type type = new TypeToken<ApiResponse<List<Comment>>>(){}.getType();
-        Request<ApiResponse> jsonRequest = new JsonRequest(commentUrl, type);
-        CallServer.getInstance().add(getApplicationContext(), 0,
-                jsonRequest, new HttpListener<ApiResponse>() {
-                    @Override
-                    public void onSuccess(int what, Response<ApiResponse> response) {
-                        ApiResponse<List<Comment>> apiResponse = response.get();
-                        List<Comment> commentList = apiResponse.result;
+    @Override
+    public void showData(List<CommentItem> commentItemList) {
+        if (commentItemList.size() == 0) {
+            mEmptyViewTV.setText("暂无评论");
+            mEmptyViewTV.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyViewTV.setVisibility(View.GONE);
+            mDataList = commentItemList;
+            adapter.notifyDataSetChanged();
+        }
+        recycler.onRefreshCompleted();
+    }
 
-                        if (commentList.size() == 0) {
-                            mEmptyViewTV.setText("暂无评论");
-                            mEmptyViewTV.setVisibility(View.VISIBLE);
-                            return;
-                        } else {
-                            mEmptyViewTV.setVisibility(View.GONE);
-                        }
-
-                        ArrayList<CommentItem> commentItemList = new ArrayList<>();
-
-                        HashMap<String, Comment> store = new HashMap<>();
-                        for (Comment comment : commentList) {
-                            store.put(comment.getTid(), comment);
-                        }
-
-                        CommentItem commentItem;
-                        for (Comment comment : commentList) {
-                            Log.d("tid:" + comment.getTid() + ",pid:" + comment.getPid()
-                                    + "," + comment.getContent());
-                            StringBuilder sb = new StringBuilder();
-
-                            commentItem = new CommentItem();
-                            commentItem.copy(comment);
-                            commentItem.sid = mSID;
-                            Comment parent = store.get(comment.getPid());
-                            while (parent != null) {
-                                sb.append("//@");
-                                if (TextUtils.isEmpty(parent.getUsername())) {
-                                    sb.append("匿名用户");
-                                } else {
-                                    sb.append(parent.getUsername());
-                                }
-                                sb.append(": [");
-                                sb.append("unknow");
-                                sb.append("]");
-                                sb.append("\n");
-                                sb.append(parent.getContent());
-                                parent = store.get(parent.getPid());
-                                if (parent != null) {
-                                    sb.append("\n");
-                                }
-                            }
-                            commentItem.parentComment = sb.toString();
-                            commentItemList.add(commentItem);
-                        }
-                        Log.d("commentItemList.size=" + commentItemList.size());
-                        mDataList = commentItemList;
-                        adapter.notifyDataSetChanged();
-                        recycler.onRefreshCompleted();
-                    }
-
-                    @Override
-                    public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
-
-                    }
-                }, true);
+    @Override
+    public void showError(String message) {
+        Log.d(message);
+        recycler.onRefreshCompleted();
     }
 
     class SampleViewHolder extends BaseViewHolder {
@@ -198,7 +167,8 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> {
             }
             mNameView.setText(userName);
 
-            mImageView.setImageDrawable(mTextBuilder.build(String.valueOf(userName.charAt(0)), mColorGenerator.getRandomColor()));
+            mImageView.setImageDrawable(mTextBuilder.build(String.valueOf(userName.charAt(0)),
+                    mColorGenerator.getColor(commentItem.tid)));
             mAddressView.setText("火星网友");
             if (TextUtils.isEmpty(commentItem.parentComment)) {
                 mParentContent.setVisibility(View.GONE);

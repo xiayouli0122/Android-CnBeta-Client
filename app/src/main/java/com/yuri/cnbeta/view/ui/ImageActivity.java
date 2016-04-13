@@ -310,16 +310,6 @@ public class ImageActivity extends Activity implements ViewPager.OnPageChangeLis
                         })
                         .into(imageview);
             } else if (showStatus == SHOWSUCCESS) {
-//                if (imageview instanceof GifImageView) {
-//                    Drawable drawable = ((GifImageView) imageview).getDrawable();
-//                    if (drawable instanceof GifDrawable) {
-//                        if (current) {
-//                            ((GifDrawable) drawable).start();
-//                        } else {
-//                            ((GifDrawable) drawable).stop();
-//                        }
-//                    }
-//                }
             }
         }
     }

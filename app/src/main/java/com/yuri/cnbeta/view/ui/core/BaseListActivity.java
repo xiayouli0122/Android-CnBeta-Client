@@ -13,6 +13,7 @@ import com.yuri.cnbeta.view.widgets.layoutmanager.ILayoutManager;
 import com.yuri.cnbeta.view.widgets.layoutmanager.MyLinearLayoutManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  */
 public abstract class BaseListActivity<T> extends BaseActivity implements PullRecycler.OnRecyclerRefreshListener {
     protected BaseListAdapter adapter;
-    protected ArrayList<T> mDataList;
+    protected List<T> mDataList;
     protected PullRecycler recycler;
     protected TextView mEmptyViewTV;
 
