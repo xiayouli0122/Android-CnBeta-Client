@@ -34,7 +34,7 @@ public class MyApplication extends Application {
 
     private void initUmengConfig() {
         //微信    wx12342956d1cab4f9,a5ae111de7d9ea137e88a5e02c07c94d
-        PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
+        PlatformConfig.setWeixin("wx54a7c3475c53229c", "ad14e541a0f0b5d5e8820a2f274f9267");
         //豆瓣RENREN平台目前只能在服务器端配置
         //新浪微博
 //        PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad");
