@@ -3,6 +3,7 @@ package com.yuri.cnbeta.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -117,6 +118,16 @@ public class Utils {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(System.currentTimeMillis());
         return format.format(date);
+    }
+
+    public static int getFontHeight(Context context, float fontSize) {
+        // Convert Dp To Px
+        float px = context.getResources().getDisplayMetrics().density * fontSize + 0.5f;
+        // Use Paint to get font height
+        Paint p = new Paint();
+        p.setTextSize(px);
+        Paint.FontMetrics fm = p.getFontMetrics();
+        return (int) Math.ceil(fm.descent - fm.ascent);
     }
 
 }

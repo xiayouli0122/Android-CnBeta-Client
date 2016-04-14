@@ -27,6 +27,7 @@ import com.yuri.cnbeta.http.response.Comment;
 import com.yuri.cnbeta.model.CommentItem;
 import com.yuri.cnbeta.presenter.NewsCommentPresenter;
 import com.yuri.cnbeta.presenter.NewsDetailPresenter;
+import com.yuri.cnbeta.utils.SpannableStringUtils;
 import com.yuri.cnbeta.view.INewsCommentView;
 import com.yuri.cnbeta.view.INewsDetailView;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
@@ -176,7 +177,13 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
             } else {
                 mParentContent.setText(commentItem.parentComment);
             }
-            mContentView.setText(Html.fromHtml(commentItem.content).toString());
+
+            boolean showEmoji = true;
+            if (showEmoji) {
+                mContentView.setText(SpannableStringUtils.span(getApplicationContext(), Html.fromHtml(commentItem.content).toString()));
+            } else {
+                mContentView.setText(Html.fromHtml(commentItem.content).toString());
+            }
             mAgainstView.setText(commentItem.against);
             mSupportView.setText(commentItem.support);
             mDateView.setText(commentItem.createdTime);

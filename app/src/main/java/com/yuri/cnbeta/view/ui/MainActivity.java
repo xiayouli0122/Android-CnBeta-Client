@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -106,19 +107,20 @@ public class MainActivity extends AppCompatActivity
                 mFragmentManager.beginTransaction().hide(mainFragment).commit();
             }
 
+            ViewPager viewPager;
             if (favoriteFragment == null) {
                 mFragmentManager.beginTransaction().add(R.id.fl_content_main, new FavoriteFragment(),
                         FAVORITE_TAG).commit();
             } else {
                 mFragmentManager.beginTransaction().show(favoriteFragment).commit();
             }
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
+//
+//        } else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
 
         }
 

@@ -8,6 +8,7 @@ import com.umeng.socialize.PlatformConfig;
 import com.yolanda.nohttp.Logger;
 import com.yolanda.nohttp.NoHttp;
 import com.yuri.cnbeta.log.Log;
+import com.yuri.cnbeta.utils.Emoticons;
 
 /**
  * Created by Yuri on 2016/4/8.
@@ -30,6 +31,7 @@ public class MyApplication extends Application {
 
         //aa init
         ActiveAndroid.initialize(this);
+        Emoticons.init(this);
     }
 
     public static Application getInstance() {

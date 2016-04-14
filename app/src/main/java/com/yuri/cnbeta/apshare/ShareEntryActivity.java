@@ -1,4 +1,4 @@
-package com.yuri.umenglib.apshare;
+package com.yuri.cnbeta.apshare;
 
 import com.umeng.socialize.media.ShareCallbackActivity;
 

@@ -1,4 +1,4 @@
-package com.yuri.umenglib;
+package com.yuri.cnbeta;
 
 import com.umeng.socialize.media.WBShareCallBackActivity;
 

@@ -1,4 +1,4 @@
-package com.yuri.umenglib.wxapi;
+package com.yuri.cnbeta.wxapi;
 
 
 import com.umeng.socialize.weixin.view.WXCallbackActivity;
