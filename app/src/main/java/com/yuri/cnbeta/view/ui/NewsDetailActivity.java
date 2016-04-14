@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -99,7 +100,7 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = NewsCommentActivity.getIntent(NewsDetailActivity.this, mContent.getSid());
+                Intent intent = NewsCommentActivity.getIntent(NewsDetailActivity.this, mContent.sid);
                 startActivity(intent);
             }
         });
@@ -132,6 +133,9 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
 
         mLoadingView.start();
 
+        if (mPresenter.isFavorited(mSID)) {
+            toolbar.getMenu().findItem(R.id.action_favorite).setTitle("已收藏");
+        }
 
         mPresenter.getData(mSID);
     }
@@ -142,10 +146,9 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
         String theme = LIGHT;
         boolean showImage = true;
         boolean convertFlashToHtml5 = false;
-        String date = Utils.getDate(Long.parseLong(mContent.inputtime) * 1000);
         String data = String.format(Locale.CHINA, WEB_TEMPLATE, colorString.substring(2, colorString.length()),
-                theme, showImage, convertFlashToHtml5, mContent.getTitle(), mContent.getSource(),
-                date, mContent.getHometext(), mContent.getBodytext());
+                theme, showImage, convertFlashToHtml5, mContent.title, mContent.source,
+                mContent.time, mContent.hometext, mContent.bodytext);
         mWebview.loadDataWithBaseURL(HttpConfigure.BASE_URL, data, "text/html", "utf-8", null);
 
         mActionButton.postDelayed(new Runnable() {
@@ -167,7 +170,7 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
     @Override
     public void showData(Content content) {
         mContent = content;
-        setUpTitle(mContent.getTitle());
+        setUpTitle(mContent.title);
         bindData();
     }
 
@@ -188,8 +191,8 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
                 UMImage umImage = new UMImage(this, mTopicLogoUrl);
                 new ShareAction(this).setDisplayList( displaylist )
                         .withText("分享自帅的不要不要的iPhone7土豪金")
-                        .withTitle(mContent.getTitle())
-                        .withTargetUrl(HttpConfigure.buildArtileUrl(mContent.getSid()))
+                        .withTitle(mContent.title)
+                        .withTargetUrl(HttpConfigure.buildArtileUrl(mContent.sid))
                         .withMedia(umImage)
                         .setCallback(new UMShareListener() {
                             @Override
@@ -211,12 +214,22 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
                         .open();
                 break;
             case R.id.action_favorite:
+                if (mPresenter.isFavorited(mSID)) {
+                    ToastUtil.showToast(getApplicationContext(), "已收藏");
+                } else {
+                    if (mPresenter.doFavorite(mContent, mTopicLogoUrl)) {
+                        toolbar.getMenu().findItem(R.id.action_favorite).setTitle("已收藏");
+                        ToastUtil.showToast(getApplicationContext(), "收藏成功");
+                    } else {
+                        ToastUtil.showToast(getApplicationContext(), "已收藏");
+                    }
+                }
                 break;
             case R.id.action_view_in_browser:
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setData(Uri.parse(HttpConfigure.buildArtileUrl(mContent.getSid())));
+                intent.setData(Uri.parse(HttpConfigure.buildArtileUrl(mContent.sid)));
                 startActivity(intent);
                 break;
         }
@@ -256,7 +269,6 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
     }
 
     class MyWebViewClient extends WebViewClient {
-        private static final String TAG = "WebView ImageLoader";
         private boolean finish = false;
 
         @Override
@@ -271,7 +283,7 @@ public class NewsDetailActivity extends BaseActivity implements INewsDetailView 
                 Intent intent;
                 Matcher sidMatcher = HttpConfigure.ARTICLE_PATTERN.matcher(url);
                 if (sidMatcher.find()) {
-                    intent = NewsDetailActivity.getIntent(NewsDetailActivity.this, mContent.getSid(), "");
+                    intent = NewsDetailActivity.getIntent(NewsDetailActivity.this, mContent.sid, "");
                     startActivity(intent);
                     finish();
                 } else {

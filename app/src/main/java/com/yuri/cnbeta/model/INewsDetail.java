@@ -2,6 +2,7 @@ package com.yuri.cnbeta.model;
 
 import android.content.Context;
 
+import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
 import com.yuri.cnbeta.model.listener.HttpResultListener;
 
@@ -10,4 +11,7 @@ import com.yuri.cnbeta.model.listener.HttpResultListener;
  */
 public interface INewsDetail extends IBaseNetModel{
     void getData(Context context, String sid, HttpResultListener listener);
+
+    boolean isFavorited(String sid);
+    boolean doFavorite(Content content, String topicLogo);
 }

@@ -38,6 +38,14 @@ public class NewsDetailPresenter extends BasePresenter<INewsDetailView>
         });
     }
 
+    public boolean isFavorited(String sid) {
+        return mNewsDetail.isFavorited(sid);
+    }
+
+    public boolean doFavorite(Content content, String topicLogo) {
+        return mNewsDetail.doFavorite(content, topicLogo);
+    }
+
     @Override
     public void cancelRequestBySign(Class<NewsDetailActivity> clazz) {
         mNewsDetail.cancelRequestBySign(clazz);

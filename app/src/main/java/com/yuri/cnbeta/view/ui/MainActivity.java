@@ -3,6 +3,7 @@ package com.yuri.cnbeta.view.ui;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,11 +16,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.yuri.cnbeta.R;
+import com.yuri.cnbeta.log.Log;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
+    private FragmentManager mFragmentManager;
+
+    private static final String MAIN_TAG = "mainFragment";
+    private static final String FAVORITE_TAG = "favoriteFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +43,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.fl_content_main, new MainFragment(), "mainFragment").commit();
+        mFragmentManager = getSupportFragmentManager();
+        mFragmentManager.beginTransaction().add(R.id.fl_content_main, new MainFragment(), MAIN_TAG).commit();
+        navigationView.getMenu().findItem(R.id.nav_camera).setChecked(true);
     }
 
     @Override
@@ -80,8 +87,31 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+            Fragment mainFragment = mFragmentManager.findFragmentByTag(MAIN_TAG);
+            Fragment favoriteFragment = mFragmentManager.findFragmentByTag(FAVORITE_TAG);
+            if (favoriteFragment != null) {
+                mFragmentManager.beginTransaction().hide(favoriteFragment).commit();
+            }
 
+            if (mainFragment == null) {
+                mFragmentManager.beginTransaction().add(R.id.fl_content_main, new MainFragment(),
+                        MAIN_TAG).commit();
+            } else {
+                mFragmentManager.beginTransaction().show(mainFragment).commit();
+            }
+        } else if (id == R.id.nav_gallery) {
+            Fragment mainFragment = mFragmentManager.findFragmentByTag(MAIN_TAG);
+            Fragment favoriteFragment = mFragmentManager.findFragmentByTag(FAVORITE_TAG);
+            if (mainFragment != null) {
+                mFragmentManager.beginTransaction().hide(mainFragment).commit();
+            }
+
+            if (favoriteFragment == null) {
+                mFragmentManager.beginTransaction().add(R.id.fl_content_main, new FavoriteFragment(),
+                        FAVORITE_TAG).commit();
+            } else {
+                mFragmentManager.beginTransaction().show(favoriteFragment).commit();
+            }
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

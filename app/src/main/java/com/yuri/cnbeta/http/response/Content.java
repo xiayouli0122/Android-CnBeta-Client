@@ -7,93 +7,22 @@ import java.io.Serializable;
  * Created by Wayne on 2016/2/21.
  */
 public class Content implements Comparable<Content>,Serializable {
-    private String sid;
-    private String topic;
-    private String aid;
-    private String title;
-    private String hometext;
-    private String bodytext;
-    private String source;
-    private String comments;
-    private String counter;
+    public String sid;
+    public String topic;
+    public String aid;
+    public String title;
+    public String hometext;
+    public String bodytext;
+    public String source;
+    public String comments;
+    public String counter;
     public String inputtime;
-
-    public String getAid() {
-        return aid;
-    }
-
-    public void setAid(String aid) {
-        this.aid = aid;
-    }
-
-    public String getSid() {
-        return sid;
-    }
-
-    public void setSid(String sid) {
-        this.sid = sid;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getHometext() {
-        return hometext;
-    }
-
-    public void setHometext(String hometext) {
-        this.hometext = hometext;
-    }
-
-    public String getBodytext() {
-        return bodytext;
-    }
-
-    public void setBodytext(String bodytext) {
-        this.bodytext = bodytext;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public String getCounter() {
-        return counter;
-    }
-
-    public void setCounter(String counter) {
-        this.counter = counter;
-    }
+    public String time;//已格式化过的日期
 
     @Override
     public int compareTo(Content another) {
-        int aSid = Integer.parseInt(this.getSid());
-        int bSid = Integer.parseInt(another.getSid());
+        int aSid = Integer.parseInt(this.sid);
+        int bSid = Integer.parseInt(another.sid);
         return bSid - aSid;
     }
 
@@ -104,7 +33,7 @@ public class Content implements Comparable<Content>,Serializable {
         if (this.getClass() != o.getClass()) return false;
 
         Content content = (Content) o;
-        return this.getSid().equals(content.getSid());
+        return this.sid.equals(content.sid);
     }
 
     @Override

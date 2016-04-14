@@ -2,9 +2,12 @@ package com.yuri.cnbeta.model.impl;
 
 import android.content.Context;
 
+import com.activeandroid.Model;
+import com.activeandroid.query.Select;
 import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.Request;
 import com.yolanda.nohttp.Response;
+import com.yuri.cnbeta.db.NewsItem;
 import com.yuri.cnbeta.http.CallServer;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
@@ -51,5 +54,35 @@ public class NewsDetailImpl extends BaseNetImpl implements INewsDetail {
                 }
             }
         }, true);
+    }
+
+    @Override
+    public boolean isFavorited(String sid) {
+        NewsItem newsItem = new Select().from(NewsItem.class).where("sid=?", sid).executeSingle();
+        return newsItem != null;
+    }
+
+    @Override
+    public boolean doFavorite(Content content, String topicLogo) {
+        if (isFavorited(content.sid)) {
+            return true;
+        }
+        NewsItem newsItem = new NewsItem();
+        newsItem.sid = content.sid;
+        newsItem.aid = content.aid;
+        newsItem.bodytext = content.bodytext;
+        newsItem.comments = content.comments;
+        newsItem.counter = content.counter;
+        newsItem.hometext = content.hometext;
+        newsItem.source = content.source;
+        newsItem.title = content.title;
+        newsItem.topic = content.topic;
+        newsItem.time = content.time;
+        newsItem.topicLogo = topicLogo;
+        if (newsItem.save() == -1) {
+            //insert error
+            return false;
+        }
+        return true;
     }
 }

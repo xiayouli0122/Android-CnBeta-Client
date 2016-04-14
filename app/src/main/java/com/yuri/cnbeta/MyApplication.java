@@ -2,6 +2,7 @@ package com.yuri.cnbeta;
 
 import android.app.Application;
 
+import com.activeandroid.ActiveAndroid;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.yolanda.nohttp.Logger;
@@ -26,6 +27,9 @@ public class MyApplication extends Application {
         Logger.setTag("YuriNet");
         Logger.setDebug(true);
         initUmengConfig();
+
+        //aa init
+        ActiveAndroid.initialize(this);
     }
 
     public static Application getInstance() {
