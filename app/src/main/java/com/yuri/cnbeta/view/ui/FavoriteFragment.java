@@ -8,14 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.activeandroid.query.Select;
 import com.bumptech.glide.Glide;
 import com.yuri.cnbeta.R;
+import com.yuri.cnbeta.contract.FavoriteContract;
 import com.yuri.cnbeta.db.NewsItem;
-import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.presenter.FavoritePresenter;
-import com.yuri.cnbeta.view.IFavoriteView;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.core.BaseListFragment;
 
@@ -27,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Yuri on 2016/4/14.
  */
-public class FavoriteFragment extends BaseListFragment<NewsItem> implements IFavoriteView {
+public class FavoriteFragment extends BaseListFragment<NewsItem> implements FavoriteContract.View {
 
     private FavoritePresenter mPresenter;
 
@@ -48,7 +46,7 @@ public class FavoriteFragment extends BaseListFragment<NewsItem> implements IFav
 
     @Override
     public void onRefresh(int action) {
-        mPresenter.getData();
+        mPresenter.getFavoriteData();
     }
 
     @Override

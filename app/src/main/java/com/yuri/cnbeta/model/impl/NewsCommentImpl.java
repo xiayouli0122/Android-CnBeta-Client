@@ -2,7 +2,6 @@ package com.yuri.cnbeta.model.impl;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.Request;
@@ -14,10 +13,9 @@ import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.http.response.Comment;
 import com.yuri.cnbeta.log.Log;
-import com.yuri.cnbeta.model.CommentItem;
-import com.yuri.cnbeta.model.INewsComment;
+import com.yuri.cnbeta.model.bean.CommentItem;
+import com.yuri.cnbeta.model.NewsCommentModel;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
-import com.yuri.cnbeta.model.listener.HttpResultListener;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -27,7 +25,7 @@ import java.util.List;
 /**
  * Created by Yuri on 2016/4/13.
  */
-public class NewsCommentImpl extends BaseNetImpl implements INewsComment {
+public class NewsCommentImpl extends BaseNetImpl implements NewsCommentModel {
 
     @Override
     public void getNewsComment(Context context, int page, final String sid, final HttpListResultListener listener) {

@@ -12,9 +12,8 @@ import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.log.Log;
-import com.yuri.cnbeta.model.IMainFragment;
+import com.yuri.cnbeta.model.MainFragmentModel;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
-import com.yuri.cnbeta.view.ui.MainFragment;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.List;
  * 数据操作的实现类
  * Created by Yuri on 2016/4/13.
  */
-public class MainFragmentImpl extends BaseNetImpl implements IMainFragment {
+public class MainFragmentImpl extends BaseNetImpl implements MainFragmentModel {
 
     /**
      * 实现获取新闻列表数据的操作
@@ -34,7 +33,7 @@ public class MainFragmentImpl extends BaseNetImpl implements IMainFragment {
     public void getData(Context context, final HttpListResultListener listener) {
         Type type = new TypeToken<ApiResponse<List<Article>>>(){}.getType();
         Request<ApiResponse> request = new JsonRequest(HttpConfigure.buildArtistUrl(), type);
-        request.setCancelSign(MainFragment.class);
+        request.setCancelSign(com.yuri.cnbeta.view.ui.MainFragment.class);
         CallServer.getInstance().add(context, 0, request, new HttpListener<ApiResponse>() {
             @Override
             public void onSuccess(int what, Response<ApiResponse> response) {

@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yuri.cnbeta.R;
+import com.yuri.cnbeta.contract.MainFragmentContract;
 import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.presenter.MainFragmentPresenter;
-import com.yuri.cnbeta.view.IMainFragmentView;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.core.BaseListFragment;
 
@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Yuri on 2016/4/7.
  */
-public class MainFragment extends BaseListFragment<Article> implements IMainFragmentView {
+public class MainFragment extends BaseListFragment<Article> implements MainFragmentContract.View {
 
     private MainFragmentPresenter mPresenter;
 

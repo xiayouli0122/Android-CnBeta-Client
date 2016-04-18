@@ -2,27 +2,28 @@ package com.yuri.cnbeta.presenter;
 
 import android.content.Context;
 
+import com.yuri.cnbeta.contract.FavoriteContract;
 import com.yuri.cnbeta.db.NewsItem;
-import com.yuri.cnbeta.model.IFavorite;
+import com.yuri.cnbeta.model.FavoriteModel;
 import com.yuri.cnbeta.model.impl.FavoriteImpl;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
-import com.yuri.cnbeta.view.IFavoriteView;
 
 import java.util.List;
 
 /**
  * Created by Yuri on 2016/4/14.
  */
-public class FavoritePresenter extends BasePresenter<IFavoriteView>  {
+public class FavoritePresenter extends BasePresenter<FavoriteContract.View> implements FavoriteContract.Presenter {
 
-    private IFavorite mFavorite;
+    private FavoriteModel mFavorite;
 
-    public FavoritePresenter(Context mContext, IFavoriteView mView) {
+    public FavoritePresenter(Context mContext, FavoriteContract.View mView) {
         super(mContext, mView);
         mFavorite = new FavoriteImpl();
     }
 
-    public void getData() {
+    @Override
+    public void getFavoriteData() {
         mFavorite.getFavoriteData(new HttpListResultListener<NewsItem>() {
             @Override
             public void onSuccess(List<NewsItem> resultList) {
@@ -31,7 +32,7 @@ public class FavoritePresenter extends BasePresenter<IFavoriteView>  {
 
             @Override
             public void onFail(String message) {
-
+                mView.showError(message);
             }
         });
     }

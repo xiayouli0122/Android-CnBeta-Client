@@ -2,7 +2,6 @@ package com.yuri.cnbeta.model.impl;
 
 import android.content.Context;
 
-import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.Request;
@@ -15,8 +14,7 @@ import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.log.Log;
-import com.yuri.cnbeta.model.INewsDetail;
-import com.yuri.cnbeta.model.listener.HttpListResultListener;
+import com.yuri.cnbeta.model.NewsDetailModel;
 import com.yuri.cnbeta.model.listener.HttpResultListener;
 import com.yuri.cnbeta.view.ui.NewsDetailActivity;
 
@@ -25,7 +23,7 @@ import java.lang.reflect.Type;
 /**
  * Created by Yuri on 2016/4/13.
  */
-public class NewsDetailImpl extends BaseNetImpl implements INewsDetail {
+public class NewsDetailImpl extends BaseNetImpl implements NewsDetailModel {
 
     @Override
     public void getData(Context context, String sid, final HttpResultListener listener) {

@@ -2,34 +2,20 @@ package com.yuri.cnbeta.view.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.reflect.TypeToken;
-import com.yolanda.nohttp.Request;
-import com.yolanda.nohttp.Response;
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.http.CallServer;
-import com.yuri.cnbeta.http.HttpConfigure;
-import com.yuri.cnbeta.http.HttpListener;
-import com.yuri.cnbeta.http.request.JsonRequest;
-import com.yuri.cnbeta.http.response.ApiResponse;
-import com.yuri.cnbeta.http.response.Content;
+import com.yuri.cnbeta.contract.NewsCommentContract;
 import com.yuri.cnbeta.log.Log;
-import com.yuri.cnbeta.http.response.Comment;
-import com.yuri.cnbeta.model.CommentItem;
+import com.yuri.cnbeta.model.bean.CommentItem;
 import com.yuri.cnbeta.presenter.NewsCommentPresenter;
-import com.yuri.cnbeta.presenter.NewsDetailPresenter;
 import com.yuri.cnbeta.utils.SpannableStringUtils;
-import com.yuri.cnbeta.view.INewsCommentView;
-import com.yuri.cnbeta.view.INewsDetailView;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.core.BaseListActivity;
 import com.yuri.cnbeta.view.widgets.ExtendPopMenu;
@@ -37,9 +23,6 @@ import com.yuri.cnbeta.view.widgets.PullRecycler;
 import com.yuri.cnbeta.view.widgets.textdrawable.TextDrawable;
 import com.yuri.cnbeta.view.widgets.textdrawable.util.ColorGenerator;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -49,7 +32,7 @@ import butterknife.OnClick;
 /**
  * Created by Yuri on 2016/4/11.
  */
-public class NewsCommentActivity extends BaseListActivity<CommentItem> implements INewsCommentView {
+public class NewsCommentActivity extends BaseListActivity<CommentItem> implements NewsCommentContract.View {
 
     public static final String EXTRA_SID = "extra_sid";
 

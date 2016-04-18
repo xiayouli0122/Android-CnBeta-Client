@@ -2,13 +2,10 @@ package com.yuri.cnbeta.presenter;
 
 import android.content.Context;
 
-import com.yuri.cnbeta.http.response.Content;
-import com.yuri.cnbeta.model.IHotComment;
+import com.yuri.cnbeta.contract.HotCommentContract;
+import com.yuri.cnbeta.model.HotCommentModel;
 import com.yuri.cnbeta.model.impl.HotCommentImpl;
-import com.yuri.cnbeta.model.impl.NewsDetailImpl;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
-import com.yuri.cnbeta.model.listener.HttpResultListener;
-import com.yuri.cnbeta.view.IHotCommetView;
 import com.yuri.cnbeta.view.ui.HotCommentsFragment;
 
 import java.util.List;
@@ -17,18 +14,19 @@ import java.util.List;
  * 新闻详情的Presenter
  * Created by Yuri on 2016/4/13.
  */
-public class HotCommentPresenter extends BasePresenter<IHotCommetView>
-        implements IBaseNetPresenter<HotCommentsFragment>{
+public class HotCommentPresenter extends BasePresenter<HotCommentContract.View>
+        implements HotCommentContract.Presenter {
 
-    private IHotComment mHotComment;
+    private HotCommentModel mHotComment;
 
-    public HotCommentPresenter(Context mContext, IHotCommetView mView) {
+    public HotCommentPresenter(Context mContext, HotCommentContract.View mView) {
         super(mContext, mView);
 
         mHotComment = new HotCommentImpl();
     }
 
-    public void getData() {
+    @Override
+    public void getHotComment() {
         mHotComment.getHotComments(mContext, new HttpListResultListener() {
             @Override
             public void onSuccess(List resultList) {

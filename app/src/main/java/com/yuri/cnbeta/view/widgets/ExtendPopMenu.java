@@ -1,14 +1,10 @@
 package com.yuri.cnbeta.view.widgets;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
-import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.Request;
 import com.yolanda.nohttp.Response;
@@ -19,10 +15,8 @@ import com.yuri.cnbeta.http.HttpListener;
 import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.log.Log;
-import com.yuri.cnbeta.model.CommentItem;
+import com.yuri.cnbeta.model.bean.CommentItem;
 import com.yuri.cnbeta.view.adapter.BaseListAdapter;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 

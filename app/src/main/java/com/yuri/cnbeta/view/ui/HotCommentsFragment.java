@@ -2,22 +2,16 @@ package com.yuri.cnbeta.view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.db.NewsItem;
+import com.yuri.cnbeta.contract.HotCommentContract;
 import com.yuri.cnbeta.http.response.HotComment;
 import com.yuri.cnbeta.log.Log;
-import com.yuri.cnbeta.presenter.FavoritePresenter;
 import com.yuri.cnbeta.presenter.HotCommentPresenter;
-import com.yuri.cnbeta.view.IFavoriteView;
-import com.yuri.cnbeta.view.IHotCommetView;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.core.BaseListFragment;
 
@@ -29,7 +23,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Yuri on 2016/4/14.
  */
-public class HotCommentsFragment extends BaseListFragment<HotComment> implements IHotCommetView {
+public class HotCommentsFragment extends BaseListFragment<HotComment> implements HotCommentContract.View {
 
     private HotCommentPresenter mPresenter;
 
@@ -50,7 +44,7 @@ public class HotCommentsFragment extends BaseListFragment<HotComment> implements
 
     @Override
     public void onRefresh(int action) {
-        mPresenter.getData();
+        mPresenter.getHotComment();
     }
 
     @Override

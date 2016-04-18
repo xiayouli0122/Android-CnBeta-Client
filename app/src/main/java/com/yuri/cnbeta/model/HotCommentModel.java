@@ -7,7 +7,7 @@ import com.yuri.cnbeta.model.listener.HttpListResultListener;
 /**
  * Created by Yuri on 2016/4/14.
  */
-public interface IHotComment extends IBaseNetModel {
+public interface HotCommentModel extends BaseNetModel {
 
     void getHotComments(Context context, HttpListResultListener listener);
 }

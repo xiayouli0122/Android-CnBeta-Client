@@ -3,13 +3,11 @@ package com.yuri.cnbeta.view.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -30,6 +28,7 @@ import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.Request;
 import com.yolanda.nohttp.Response;
 import com.yuri.cnbeta.R;
+import com.yuri.cnbeta.contract.NewsDetailContract;
 import com.yuri.cnbeta.http.CallServer;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
@@ -37,8 +36,6 @@ import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.presenter.NewsDetailPresenter;
 import com.yuri.cnbeta.utils.ToastUtil;
-import com.yuri.cnbeta.utils.Utils;
-import com.yuri.cnbeta.view.INewsDetailView;
 import com.yuri.cnbeta.view.ui.core.BaseActivity;
 import com.yuri.cnbeta.view.widgets.AVLoadingIndicatorView.AVLoadingIndicatorView;
 
@@ -50,7 +47,7 @@ import java.util.regex.Matcher;
  *  <p>从cnbeta服务器api接口中获取指定新闻的数据详情，然后根据web页面模板动态生成一个web页面显示在webview上</p>
  * Created by Yuri on 2016/4/11.
  */
-public class NewsDetailActivity extends BaseActivity implements INewsDetailView {
+public class NewsDetailActivity extends BaseActivity implements NewsDetailContract.View {
 
     public static final String EXTRA_SID = "extra_sid";
     public static final String EXTRA_TOPIC_LOGO = "extra_topic_logo";

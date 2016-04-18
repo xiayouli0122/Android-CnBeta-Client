@@ -2,29 +2,29 @@ package com.yuri.cnbeta.presenter;
 
 import android.content.Context;
 
-import com.yuri.cnbeta.model.CommentItem;
-import com.yuri.cnbeta.model.INewsComment;
+import com.yuri.cnbeta.contract.NewsCommentContract;
+import com.yuri.cnbeta.model.bean.CommentItem;
+import com.yuri.cnbeta.model.NewsCommentModel;
 import com.yuri.cnbeta.model.impl.NewsCommentImpl;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
-import com.yuri.cnbeta.view.INewsCommentView;
 import com.yuri.cnbeta.view.ui.NewsCommentActivity;
-import com.yuri.cnbeta.view.ui.NewsDetailActivity;
 
 import java.util.List;
 
 /**
  * Created by Yuri on 2016/4/13.
  */
-public class NewsCommentPresenter extends BasePresenter<INewsCommentView>
-        implements  IBaseNetPresenter<NewsDetailActivity>{
+public class NewsCommentPresenter extends BasePresenter<NewsCommentContract.View>
+        implements NewsCommentContract.Presenter {
 
-    private INewsComment mNewsComment;
+    private NewsCommentModel mNewsComment;
 
-    public NewsCommentPresenter(Context mContext, INewsCommentView mView) {
+    public NewsCommentPresenter(Context mContext, NewsCommentContract.View mView) {
         super(mContext, mView);
         mNewsComment = new NewsCommentImpl();
     }
 
+    @Override
     public void getNewsComment(int page, String sid) {
         mNewsComment.getNewsComment(mContext, page, sid, new HttpListResultListener<CommentItem>() {
             @Override
@@ -40,7 +40,7 @@ public class NewsCommentPresenter extends BasePresenter<INewsCommentView>
     }
 
     @Override
-    public void cancelRequestBySign(Class<NewsDetailActivity> clazz) {
+    public void cancelRequestBySign(Class<NewsCommentActivity> clazz) {
         mNewsComment.cancelRequestBySign(clazz);
     }
 }
