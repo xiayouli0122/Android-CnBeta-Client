@@ -27,19 +27,24 @@ public class HttpConfigure {
     private static final String V = "1.0";
 
     private static final String EXTRA = "mpuffgvbvbttn3Rc";
-    private static final String KEY_METHOD = "method";
     private static final String NEWS_LISTS = "Article.Lists";
     private static final String NEWS_CONTENT = "Article.NewsContent";
     private static final String NEWS_COMMENT = "Article.Comment";
     private static final String DO_COMMENT = "Article.DoCmt";
     private static final String RECOMMEND_COMMENT = "Article.RecommendComment";
+    private static final String TOP_TEN = "Article.Top10";
+    private static final String DAY_RANK = "Article.TodayRank";
 
+    private static final String KEY_METHOD = "method";
+    private static final String KEY_END_SID = "end_sid";
+    private static final String KEY_TOPICID = "topicid";
+    private static final String KEY_RANK_TYPE = "type";
     private static final String KEY_SID = "sid";
     private static final String KEY_PAGE = "page";
     private static final String KEY_PAGE_SIZE = "pageSize";
-    private static final String KEY_PID = "pid";
     private static final String KEY_OP = "op";
     private static final String KEY_TID = "tid";
+    private static final String KEY_PID = "pid";
 
     private static final String ARTICLE_URL = BASE_URL + "/articles/%s.htm";
 
@@ -54,6 +59,46 @@ public class HttpConfigure {
         map.put("v", V);
         map.put("timestamp", String.valueOf(System.currentTimeMillis()));
         return map;
+    }
+
+    /**
+     * 获取当月top 10新闻列表
+     * @return
+     */
+    public static String getMonthlyTopTen() {
+        Map<String, String> paramMap = initParamMap();
+        paramMap.put(KEY_METHOD, TOP_TEN);
+        return buildUrl(paramMap);
+    }
+
+    /**
+     * 每日新闻
+     * @param rankType 排序方式
+     * @return
+     */
+    public static String getDialyRank(String rankType) {
+        Map<String, String> paramMap = initParamMap();
+        paramMap.put(KEY_METHOD, rankType);
+        return buildUrl(paramMap);
+    }
+
+    /**
+     * @param topicid
+     * @return
+     */
+    public static String getTopNews(String topicid) {
+        Map<String, String> paramMap = initParamMap();
+        paramMap.put(KEY_METHOD, NEWS_LISTS);
+        paramMap.put(KEY_TOPICID, topicid);
+        return buildUrl(paramMap);
+    }
+
+    public static String getMoreNews(String endSid, String topicid) {
+        Map<String, String> paramMap = initParamMap();
+        paramMap.put(KEY_METHOD, NEWS_LISTS);
+        paramMap.put(KEY_END_SID, endSid);
+        paramMap.put(KEY_TOPICID, topicid);
+        return buildUrl(paramMap);
     }
 
     /**
@@ -110,11 +155,26 @@ public class HttpConfigure {
         return String.format(Locale.CHINA, ARTICLE_URL, sid);
     }
 
-    public static String buildArtistUrl() {
+    /**
+     * 获取最新资讯列表
+     * @return
+     */
+    public static String getLatestNews() {
         Map<String, String> paramMap = initParamMap();
         paramMap.put(KEY_METHOD, NEWS_LISTS);
-        String urlString = buildUrl(paramMap);
-        return urlString;
+        return buildUrl(paramMap);
+    }
+
+    /**
+     * 获取更多最新资讯列表
+     * @param lastSid 上一次列表最后一条新闻的sid
+     * @return
+     */
+    public static String getMoreLatestNews(String lastSid) {
+        Map<String, String> paramMap = initParamMap();
+        paramMap.put(KEY_METHOD, NEWS_LISTS);
+        paramMap.put(KEY_END_SID, lastSid);
+        return buildUrl(paramMap);
     }
 
     private static String buildUrl(Map<String, String> map) {

@@ -1,6 +1,7 @@
 package com.yuri.cnbeta.model.impl;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.Request;
@@ -14,6 +15,7 @@ import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.MainFragmentModel;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
+import com.yuri.cnbeta.view.ui.MainFragment;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -31,9 +33,24 @@ public class MainFragmentImpl extends BaseNetImpl implements MainFragmentModel {
      */
     @Override
     public void getData(Context context, final HttpListResultListener listener) {
+        getNews(context, null, listener);
+    }
+
+    @Override
+    public void getMoreData(Context context, String lastSid, HttpListResultListener listener) {
+        getNews(context, lastSid, listener);
+    }
+
+    private void getNews(Context context, String lastSid, final HttpListResultListener listener) {
         Type type = new TypeToken<ApiResponse<List<Article>>>(){}.getType();
-        Request<ApiResponse> request = new JsonRequest(HttpConfigure.buildArtistUrl(), type);
-        request.setCancelSign(com.yuri.cnbeta.view.ui.MainFragment.class);
+        String url;
+        if (TextUtils.isEmpty(lastSid)) {
+            url = HttpConfigure.getLatestNews();
+        } else {
+            url = HttpConfigure.getMoreLatestNews(lastSid);
+        }
+        Request<ApiResponse> request = new JsonRequest(url, type);
+        request.setCancelSign(MainFragment.class);
         CallServer.getInstance().add(context, 0, request, new HttpListener<ApiResponse>() {
             @Override
             public void onSuccess(int what, Response<ApiResponse> response) {
@@ -41,7 +58,7 @@ public class MainFragmentImpl extends BaseNetImpl implements MainFragmentModel {
                 Log.d("status:" + apiResponse.status);
                 List<Article> articleList = apiResponse.result;
 //                for (Article article : articleList) {
-//                    Log.d("" + article.getTitle());
+//                    Log.d(article.getTitle());
 //                }
                 if (listener != null) {
                     listener.onSuccess(articleList);

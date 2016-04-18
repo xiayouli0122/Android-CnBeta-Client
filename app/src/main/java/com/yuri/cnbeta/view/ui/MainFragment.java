@@ -11,11 +11,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.contract.MainFragmentContract;
+import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.presenter.MainFragmentPresenter;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.core.BaseListFragment;
+import com.yuri.cnbeta.view.widgets.PullRecycler;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ import butterknife.ButterKnife;
 public class MainFragment extends BaseListFragment<Article> implements MainFragmentContract.View {
 
     private MainFragmentPresenter mPresenter;
+    private String mLastSid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,7 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
         }
         //启动自动刷新
         mRecycler.setRefreshing();
+        mRecycler.enableLoadMore(true);
     }
 
     @Override
@@ -55,16 +59,33 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
     public void onRefresh(int action) {
         Log.d("action:" + action);
         //交给Presenter去实现数据获取操作
-        mPresenter.getData();
+        switch (action) {
+            case PullRecycler.ACTION_PULL_TO_REFRESH:
+            case PullRecycler.ACTION_IDLE:
+                mPresenter.getData();
+                break;
+            case PullRecycler.ACTION_LOAD_MORE_REFRESH:
+                mPresenter.getMoreData(mLastSid);
+                break;
+        }
     }
 
     @Override
-    public void showData(List<Article> articleList) {
+    public void showData(boolean isMore, List<Article> articleList) {
         Log.d("" + articleList.size());
-        if (mDataList != null && mDataList.size() > 0) {
-            mDataList.clear();
+        if (!isMore) {
+            //自动加载、下拉刷新
+            if (mDataList != null && mDataList.size() > 0) {
+                mDataList.clear();
+            }
+            mDataList = articleList;
+        } else {
+            mDataList.addAll(articleList);
         }
-        mDataList = articleList;
+        Article lastArticle = mDataList.get(mDataList.size() - 1);
+//        Log.d("lastArticle.title:" + lastArticle.getTitle());
+        mLastSid = lastArticle.getSid();
+
         mAdapter.notifyDataSetChanged();
         mRecycler.onRefreshCompleted();
     }

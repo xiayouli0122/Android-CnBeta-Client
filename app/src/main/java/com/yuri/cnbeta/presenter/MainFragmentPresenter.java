@@ -7,6 +7,7 @@ import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.model.MainFragmentModel;
 import com.yuri.cnbeta.model.impl.MainFragmentImpl;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
+import com.yuri.cnbeta.view.ui.MainFragment;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentContract.Vi
         mMainFragment.getData(mContext, new HttpListResultListener<Article>() {
             @Override
             public void onSuccess(List<Article> resultList) {
-                mView.showData(resultList);
+                mView.showData(false, resultList);
             }
 
             @Override
@@ -44,7 +45,22 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentContract.Vi
     }
 
     @Override
-    public void cancelRequestBySign(Class<com.yuri.cnbeta.view.ui.MainFragment> clazz) {
+    public void getMoreData(String lastSid) {
+        mMainFragment.getMoreData(mContext, lastSid, new HttpListResultListener<Article>() {
+            @Override
+            public void onSuccess(List<Article> resultList) {
+                mView.showData(true, resultList);
+            }
+
+            @Override
+            public void onFail(String message) {
+                mView.showError(message);
+            }
+        });
+    }
+
+    @Override
+    public void cancelRequestBySign(Class<MainFragment> clazz) {
         mMainFragment.cancelRequestBySign(clazz);
     }
 }

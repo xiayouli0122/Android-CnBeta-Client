@@ -17,12 +17,13 @@ public interface MainFragmentContract {
          * 获取到新闻数据的时候，将之显示到UI上
          * @param articleList 数据列表
          */
-        void showData(List<Article> articleList);
+        void showData(boolean isMore, List<Article> articleList);
     }
 
 
     interface Presenter extends BaseNetPresenter<MainFragment> {
         void getData();
+        void getMoreData(String lastSid);
     }
 }
 

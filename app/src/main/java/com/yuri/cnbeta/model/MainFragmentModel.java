@@ -10,4 +10,5 @@ import com.yuri.cnbeta.model.listener.HttpListResultListener;
  */
 public interface MainFragmentModel extends BaseNetModel {
     void getData(Context context, HttpListResultListener listener);
+    void getMoreData(Context context, String lastSid, HttpListResultListener listener);
 }
