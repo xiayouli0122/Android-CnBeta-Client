@@ -6,4 +6,11 @@
 
     <color name="ripple_color">#40000000</color>
     <color name="gray_80">#CC000000</color>
+
+    <color name="quoteBackground">#fff9c4</color>
+    <color name="quoteBorder">#f9ab25</color>
+
+    <color name="textPrimaryDark">#DE000000</color>
+    <color name="textSecondaryDark">#8A000000</color>
+    <color name="textHintDark">#61000000</color>
 </resources>

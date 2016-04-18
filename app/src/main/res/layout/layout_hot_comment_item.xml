@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="5dp"
+    android:clickable="true"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/item_background"
+        >
+
+        <TextView
+            android:id="@+id/tv_hot_comment_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_hot_comment"
+            android:textSize="18sp"
+            android:textColor="@color/textPrimaryDark"
+            android:padding="4dp"
+            android:text="上登录福建省收到付款交多少空间啥地方开始放假看， 水电费水电费"
+            />
+
+        <TextView
+            android:id="@+id/tv_hot_comment_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:textSize="12sp"
+            android:textColor="@color/textHintDark"
+            android:singleLine="true"
+            android:text="111111111111"
+            />
+
+        <TextView
+            android:id="@+id/tv_hot_comment_subject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:padding="4dp"
+            android:textColor="@color/textSecondaryDark"
+            android:singleLine="true"
+            android:text="是大家都得快点快点快点"
+            />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

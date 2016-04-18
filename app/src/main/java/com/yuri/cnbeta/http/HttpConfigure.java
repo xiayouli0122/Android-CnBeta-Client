@@ -32,6 +32,7 @@ public class HttpConfigure {
     private static final String NEWS_CONTENT = "Article.NewsContent";
     private static final String NEWS_COMMENT = "Article.Comment";
     private static final String DO_COMMENT = "Article.DoCmt";
+    private static final String RECOMMEND_COMMENT = "Article.RecommendComment";
 
     private static final String KEY_SID = "sid";
     private static final String KEY_PAGE = "page";
@@ -53,6 +54,16 @@ public class HttpConfigure {
         map.put("v", V);
         map.put("timestamp", String.valueOf(System.currentTimeMillis()));
         return map;
+    }
+
+    /**
+     * 获取热门评论url
+     * @return url
+     */
+    public static String hotComments() {
+        Map<String, String> paramMap = initParamMap();
+        paramMap.put(KEY_METHOD, RECOMMEND_COMMENT);
+        return buildUrl(paramMap);
     }
 
     public static String voteComment(String op, String sid, String tid) {
