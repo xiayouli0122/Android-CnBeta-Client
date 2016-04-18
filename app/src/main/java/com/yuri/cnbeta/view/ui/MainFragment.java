@@ -14,6 +14,7 @@ import com.yuri.cnbeta.contract.MainFragmentContract;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.log.Log;
+import com.yuri.cnbeta.model.bean.NewsType;
 import com.yuri.cnbeta.presenter.MainFragmentPresenter;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.core.BaseListFragment;
@@ -29,13 +30,28 @@ import butterknife.ButterKnife;
  */
 public class MainFragment extends BaseListFragment<Article> implements MainFragmentContract.View {
 
+    private static final String NEWS_TYPE = "mainfragment.news_type";
     private MainFragmentPresenter mPresenter;
     private String mLastSid;
+
+    private NewsType mNewsType;
+
+    public static MainFragment getInstance(NewsType newsType) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(NEWS_TYPE, newsType);
+        MainFragment mainFragment = new MainFragment();
+        mainFragment.setArguments(bundle);
+        return mainFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter = new MainFragmentPresenter(getActivity(), this);
+
+        mNewsType = (NewsType) getArguments().getSerializable(NEWS_TYPE);
+        Log.d("newstype:" + mNewsType.getValue());
+
+        mPresenter = new MainFragmentPresenter(getActivity(), mNewsType, this);
     }
 
     @Override
@@ -46,7 +62,11 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
         }
         //启动自动刷新
         mRecycler.setRefreshing();
-        mRecycler.enableLoadMore(true);
+        if (mNewsType == NewsType.MONTHLY) {
+            mRecycler.enableLoadMore(false);
+        } else {
+            mRecycler.enableLoadMore(true);
+        }
     }
 
     @Override

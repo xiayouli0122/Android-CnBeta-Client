@@ -7,17 +7,17 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="Latest News" />
         <item
-            android:id="@+id/nav_favorite"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Favorite News" />
-        <item
             android:id="@+id/nav_hot_comments"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Hot Comments" />
-        <!--<item-->
-            <!--android:id="@+id/nav_manage"-->
-            <!--android:icon="@drawable/ic_menu_manage"-->
-            <!--android:title="Tools" />-->
+        <item
+            android:id="@+id/nav_monthly_top_ten"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Monthly Top 10" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Favorite News" />
     </group>
 
     <!--<item android:title="Communicate">-->

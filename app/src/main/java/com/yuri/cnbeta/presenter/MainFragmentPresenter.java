@@ -1,11 +1,14 @@
 package com.yuri.cnbeta.presenter;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.yuri.cnbeta.contract.MainFragmentContract;
 import com.yuri.cnbeta.http.response.Article;
+import com.yuri.cnbeta.model.ArticleModel;
 import com.yuri.cnbeta.model.MainFragmentModel;
-import com.yuri.cnbeta.model.impl.MainFragmentImpl;
+import com.yuri.cnbeta.model.bean.NewsType;
+import com.yuri.cnbeta.model.impl.NewsArticleImpl;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
 import com.yuri.cnbeta.view.ui.MainFragment;
 
@@ -18,12 +21,13 @@ import java.util.List;
 public class MainFragmentPresenter extends BasePresenter<MainFragmentContract.View>
         implements MainFragmentContract.Presenter {
 
-    private MainFragmentModel mMainFragment;
+    private ArticleModel mArticleModel;
 
-    public MainFragmentPresenter(Context mContext, MainFragmentContract.View mView) {
+    public MainFragmentPresenter(Context mContext, NewsType newsType, MainFragmentContract.View mView) {
         super(mContext, mView);
 
-        mMainFragment = new MainFragmentImpl();
+        mArticleModel = NewsArticleImpl.getInstance(mContext);
+        mArticleModel.setNewsType(newsType);
     }
 
     /**
@@ -31,7 +35,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentContract.Vi
      */
     @Override
     public void getData() {
-        mMainFragment.getData(mContext, new HttpListResultListener<Article>() {
+        mArticleModel.getData(mContext, new HttpListResultListener<Article>() {
             @Override
             public void onSuccess(List<Article> resultList) {
                 mView.showData(false, resultList);
@@ -46,7 +50,7 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentContract.Vi
 
     @Override
     public void getMoreData(String lastSid) {
-        mMainFragment.getMoreData(mContext, lastSid, new HttpListResultListener<Article>() {
+        mArticleModel.getMoreData(mContext, lastSid, new HttpListResultListener<Article>() {
             @Override
             public void onSuccess(List<Article> resultList) {
                 mView.showData(true, resultList);
@@ -61,6 +65,6 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentContract.Vi
 
     @Override
     public void cancelRequestBySign(Class<MainFragment> clazz) {
-        mMainFragment.cancelRequestBySign(clazz);
+        mArticleModel.cancelRequestBySign(clazz);
     }
 }

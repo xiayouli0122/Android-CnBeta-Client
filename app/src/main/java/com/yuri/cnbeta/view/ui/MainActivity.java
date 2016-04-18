@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.log.Log;
+import com.yuri.cnbeta.model.bean.NewsType;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity
     private static final String MAIN_TAG = "mainFragment";
     private static final String FAVORITE_TAG = "favoriteFragment";
     private static final String HOT_COMMENTS_TAG = "hotCommentFragment";
+    private static final String MONTHLY_TOP_TEN_TAG = "topTenFragment";
 
     private Toolbar mToolbar;
 
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //init
-        mCurrentFragment = new MainFragment();
+        mCurrentFragment = MainFragment.getInstance(NewsType.LATEST);
 
         mFragmentManager = getSupportFragmentManager();
         mFragmentManager.beginTransaction().add(R.id.fl_content_main, mCurrentFragment, MAIN_TAG).commit();
@@ -106,6 +108,10 @@ public class MainActivity extends AppCompatActivity
                 tag = HOT_COMMENTS_TAG;
                 title = "热门评论";
                 break;
+            case R.id.nav_monthly_top_ten:
+                tag = MONTHLY_TOP_TEN_TAG;
+                title = "每月TOP10";
+                break;
         }
         showFragment(tag);
         mToolbar.setTitle(title);
@@ -122,13 +128,16 @@ public class MainActivity extends AppCompatActivity
         if (showFragment == null) {
             switch (tag) {
                 case MAIN_TAG:
-                    showFragment = new MainFragment();
+                    showFragment = MainFragment.getInstance(NewsType.LATEST);
                     break;
                 case FAVORITE_TAG:
                     showFragment = new FavoriteFragment();
                     break;
                 case HOT_COMMENTS_TAG:
                     showFragment = new HotCommentsFragment();
+                    break;
+                case MONTHLY_TOP_TEN_TAG:
+                    showFragment = MainFragment.getInstance(NewsType.MONTHLY);
                     break;
                 default:
                     Log.e("tag:" + tag);

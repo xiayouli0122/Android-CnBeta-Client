@@ -13,7 +13,9 @@ import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.log.Log;
+import com.yuri.cnbeta.model.ArticleModel;
 import com.yuri.cnbeta.model.MainFragmentModel;
+import com.yuri.cnbeta.model.bean.NewsType;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
 import com.yuri.cnbeta.view.ui.MainFragment;
 
@@ -24,7 +26,27 @@ import java.util.List;
  * 数据操作的实现类
  * Created by Yuri on 2016/4/13.
  */
-public class MainFragmentImpl extends BaseNetImpl implements MainFragmentModel {
+public class NewsArticleImpl extends BaseNetImpl implements ArticleModel {
+
+    private static NewsArticleImpl mInstance;
+    private Context mContext;
+    private NewsType mNewsType;
+
+    private NewsArticleImpl(Context context) {
+        this.mContext = context;
+    }
+
+    public static NewsArticleImpl getInstance(Context context) {
+        if (mInstance == null) {
+            mInstance = new NewsArticleImpl(context);
+        }
+        return mInstance;
+    }
+
+    @Override
+    public void setNewsType(NewsType newsType) {
+        this.mNewsType = newsType;
+    }
 
     /**
      * 实现获取新闻列表数据的操作
@@ -43,11 +65,22 @@ public class MainFragmentImpl extends BaseNetImpl implements MainFragmentModel {
 
     private void getNews(Context context, String lastSid, final HttpListResultListener listener) {
         Type type = new TypeToken<ApiResponse<List<Article>>>(){}.getType();
-        String url;
-        if (TextUtils.isEmpty(lastSid)) {
-            url = HttpConfigure.getLatestNews();
+        String url = null;
+        Log.d("newsType:" + mNewsType);
+        if (mNewsType == NewsType.LATEST) {
+            if (TextUtils.isEmpty(lastSid)) {
+                url = HttpConfigure.getLatestNews();
+            } else {
+                url = HttpConfigure.getMoreLatestNews(lastSid);
+            }
+        } else if (mNewsType == NewsType.MONTHLY) {
+            if (TextUtils.isEmpty(lastSid)) {
+                url = HttpConfigure.getMonthlyTopTen();
+            } else {
+//                url = HttpConfigure.getMoreLatestNews(lastSid);
+            }
         } else {
-            url = HttpConfigure.getMoreLatestNews(lastSid);
+            Log.e("type:" + mNewsType);
         }
         Request<ApiResponse> request = new JsonRequest(url, type);
         request.setCancelSign(MainFragment.class);
