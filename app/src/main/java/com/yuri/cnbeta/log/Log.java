@@ -7,7 +7,7 @@ public class Log {
     public static final boolean isDebug = true;
 
     private static final String APP_LOG_TAG = "Yuri/";
-    private static final String APP_NETWORK_TAG = "MeMediaNetwork/";
+    private static final String APP_NETWORK_TAG = "YuriNetwork/";
 
     public static void v() {
         if (isDebug) {

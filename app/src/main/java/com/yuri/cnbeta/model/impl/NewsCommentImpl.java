@@ -28,7 +28,7 @@ import java.util.List;
 public class NewsCommentImpl extends BaseNetImpl implements NewsCommentModel {
 
     @Override
-    public void getNewsComment(Context context, int page, final String sid, final HttpListResultListener listener) {
+    public void getNewsComment(Context context, final int page, final String sid, final HttpListResultListener listener) {
         final String commentUrl = HttpConfigure.newsComment(page + "", sid);
         Log.d("commentUrl:" + commentUrl);
         Type type = new TypeToken<ApiResponse<List<Comment>>>(){}.getType();
@@ -63,6 +63,8 @@ public class NewsCommentImpl extends BaseNetImpl implements NewsCommentModel {
                             commentItem.copy(comment);
                             commentItem.sid = sid;
                             Comment parent = store.get(comment.getPid());
+                            int index = commentList.indexOf(parent) + 1;
+                            String parentComment = "";
                             while (parent != null) {
                                 sb.append("//@");
                                 if (TextUtils.isEmpty(parent.getUsername())) {
@@ -72,15 +74,26 @@ public class NewsCommentImpl extends BaseNetImpl implements NewsCommentModel {
                                 }
                                 sb.append(": [");
                                 sb.append("unknow");
-                                sb.append("]");
+                                sb.append("] " + index + "楼");
                                 sb.append("\n");
                                 sb.append(parent.getContent());
-                                parent = store.get(parent.getPid());
-                                if (parent != null) {
+
+                                if (parentComment.equals("")) {
+                                    parentComment = sb.toString();
+                                    sb.delete(0, sb.length());
+                                } else {
                                     sb.append("\n");
+                                    parentComment = sb.toString() + parentComment;
+                                    sb.delete(0, sb.length());
                                 }
+                                parent = store.get(parent.getPid());
+                                index = commentList.indexOf(parent) + 1;
+//                                if (parent != null) {
+//                                    sb.append("\n");
+//                                }
                             }
-                            commentItem.parentComment = sb.toString();
+//                            commentItem.parentComment = sb.toString();
+                            commentItem.parentComment = parentComment;
                             commentItemList.add(commentItem);
                         }
                         Log.d("commentItemList.size=" + commentItemList.size());

@@ -97,7 +97,8 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = NewsCommentActivity.getIntent(NewsDetailActivity.this, mContent.sid);
+                Intent intent = NewsCommentActivity.getIntent(NewsDetailActivity.this,
+                        mContent.sid, Integer.parseInt(mContent.comments));
                 startActivity(intent);
             }
         });

@@ -23,6 +23,7 @@ import com.yuri.cnbeta.view.widgets.PullRecycler;
 import com.yuri.cnbeta.view.widgets.textdrawable.TextDrawable;
 import com.yuri.cnbeta.view.widgets.textdrawable.util.ColorGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -35,16 +36,19 @@ import butterknife.OnClick;
 public class NewsCommentActivity extends BaseListActivity<CommentItem> implements NewsCommentContract.View {
 
     public static final String EXTRA_SID = "extra_sid";
+    public static final String EXTRA_COUNTERS = "extra_counters";
 
     private String mSID;
-    private int mPage = 0;
+    private int mPage = 1;
+    private int mCounters = 0;
 
     private NewsCommentPresenter mPresenter;
 
-    public static Intent getIntent(Context context, String sid) {
+    public static Intent getIntent(Context context, String sid, int counters) {
         Intent intent = new Intent();
         intent.setClass(context, NewsCommentActivity.class);
         intent.putExtra(EXTRA_SID, sid);
+        intent.putExtra(EXTRA_COUNTERS, counters);
         return intent;
     }
 
@@ -55,6 +59,7 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
         mPresenter = new NewsCommentPresenter(getApplicationContext(), this);
 
         mSID = getIntent().getStringExtra(EXTRA_SID);
+        mCounters = getIntent().getIntExtra(EXTRA_COUNTERS, 0);
         Log.d("sID：" + mSID);
 
         setUpTitle("评论");
@@ -69,10 +74,14 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
 
     @Override
     public void onRefresh(int action) {
+        Log.d("action:" + action);
         switch (action) {
             case PullRecycler.ACTION_IDLE:
             case PullRecycler.ACTION_PULL_TO_REFRESH:
-                mPage = 0;//下拉刷新从第一页开始加载
+                mPage = 1;//下拉刷新从第一页开始加载
+                if (mDataList != null) {
+                    mDataList.clear();
+                }
                 break;
             case PullRecycler.ACTION_LOAD_MORE_REFRESH:
                 mPage ++;
@@ -83,15 +92,30 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
 
     @Override
     public void showData(List<CommentItem> commentItemList) {
-        if (commentItemList.size() == 0) {
+        if ((mDataList == null) && commentItemList.size() == 0) {
             mEmptyViewTV.setText("暂无评论");
             mEmptyViewTV.setVisibility(View.VISIBLE);
+            recycler.onRefreshCompleted();
+            return;
+        } else if (mDataList != null && mDataList.size() > 0 && commentItemList.size() == 0) {
+            recycler.enableLoadMore(false);
+            recycler.onRefreshCompleted();
+            return;
         } else {
             mEmptyViewTV.setVisibility(View.GONE);
-            mDataList = commentItemList;
+            if (mDataList == null) {
+                mDataList = commentItemList;
+            } else {
+                mDataList.addAll(commentItemList);
+            }
             adapter.notifyDataSetChanged();
         }
         recycler.onRefreshCompleted();
+        if (mDataList.size() < mCounters) {
+            recycler.enableLoadMore(true);
+        } else {
+            recycler.enableLoadMore(false);
+        }
     }
 
     @Override
@@ -134,7 +158,7 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
             mTextBuilder = TextDrawable.builder().round();
             mColorGenerator = ColorGenerator.MATERIAL;
 
-            Log.d("m:" + mMoreView);
+//            Log.d("m:" + mMoreView);
             mPopMenu = new ExtendPopMenu(getApplicationContext(), mMoreView);
         }
 
@@ -150,6 +174,8 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
             } else {
                 userName = commentItem.username;
             }
+
+            userName = userName + " (" + (position + 1) + "楼)";
             mNameView.setText(userName);
 
             mImageView.setImageDrawable(mTextBuilder.build(String.valueOf(userName.charAt(0)),
@@ -158,6 +184,7 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
             if (TextUtils.isEmpty(commentItem.parentComment)) {
                 mParentContent.setVisibility(View.GONE);
             } else {
+                mParentContent.setVisibility(View.VISIBLE);
                 mParentContent.setText(commentItem.parentComment);
             }
 

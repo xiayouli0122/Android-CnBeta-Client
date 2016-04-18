@@ -44,6 +44,7 @@ public class HotCommentsFragment extends BaseListFragment<HotComment> implements
 
     @Override
     public void onRefresh(int action) {
+        Log.d("action:" + action);
         mPresenter.getHotComment();
     }
 
