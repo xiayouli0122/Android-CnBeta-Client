@@ -23,11 +23,11 @@ public class MainFragmentPresenter extends BasePresenter<MainFragmentContract.Vi
 
     private ArticleModel mArticleModel;
 
-    public MainFragmentPresenter(Context mContext, NewsType newsType, MainFragmentContract.View mView) {
+    public MainFragmentPresenter(Context mContext, Bundle bundle, MainFragmentContract.View mView) {
         super(mContext, mView);
 
-        mArticleModel = NewsArticleImpl.getInstance(mContext);
-        mArticleModel.setNewsType(newsType);
+        mArticleModel = new NewsArticleImpl(mContext);
+        mArticleModel.setBundle(bundle);
     }
 
     /**

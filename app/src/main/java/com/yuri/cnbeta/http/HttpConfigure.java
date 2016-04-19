@@ -78,7 +78,8 @@ public class HttpConfigure {
      */
     public static String getDialyRank(String rankType) {
         Map<String, String> paramMap = initParamMap();
-        paramMap.put(KEY_METHOD, rankType);
+        paramMap.put(KEY_METHOD, DAY_RANK);
+        paramMap.put(KEY_RANK_TYPE, rankType);
         return buildUrl(paramMap);
     }
 

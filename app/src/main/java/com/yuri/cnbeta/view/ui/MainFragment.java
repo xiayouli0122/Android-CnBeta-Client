@@ -30,7 +30,8 @@ import butterknife.ButterKnife;
  */
 public class MainFragment extends BaseListFragment<Article> implements MainFragmentContract.View {
 
-    private static final String NEWS_TYPE = "mainfragment.news_type";
+    public static final String NEWS_TYPE = "mainfragment.news_type";
+    public static final String NEWS_PARAM = "mainfragment.news_param";
     private MainFragmentPresenter mPresenter;
     private String mLastSid;
 
@@ -44,14 +45,27 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
         return mainFragment;
     }
 
+    public static MainFragment getInstance(NewsType newsType, String param) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(NEWS_TYPE, newsType);
+        bundle.putString(NEWS_PARAM, param);
+        MainFragment mainFragment = new MainFragment();
+        mainFragment.setArguments(bundle);
+        return mainFragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mNewsType = (NewsType) getArguments().getSerializable(NEWS_TYPE);
-        Log.d("newstype:" + mNewsType.getValue());
+        String param = getArguments().getString(NEWS_PARAM);
+        Log.d("newstype:" + mNewsType.getValue() + ",param:" + param);
 
-        mPresenter = new MainFragmentPresenter(getActivity(), mNewsType, this);
+        mPresenter = new MainFragmentPresenter(getActivity(), getArguments(), this);
+
+//        String dialyRank = HttpConfigure.getDialyRank("comments");
+//        Log.d(dialyRank);
     }
 
     @Override
@@ -62,7 +76,7 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
         }
         //启动自动刷新
         mRecycler.setRefreshing();
-        if (mNewsType == NewsType.MONTHLY) {
+        if (mNewsType == NewsType.MONTHLY || mNewsType == NewsType.DAILY) {
             mRecycler.enableLoadMore(false);
         } else {
             mRecycler.enableLoadMore(true);

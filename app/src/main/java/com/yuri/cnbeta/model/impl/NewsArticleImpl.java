@@ -1,6 +1,7 @@
 package com.yuri.cnbeta.model.impl;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.google.gson.reflect.TypeToken;
@@ -28,19 +29,18 @@ import java.util.List;
  */
 public class NewsArticleImpl extends BaseNetImpl implements ArticleModel {
 
-    private static NewsArticleImpl mInstance;
     private Context mContext;
     private NewsType mNewsType;
+    private String mParam;
 
-    private NewsArticleImpl(Context context) {
+    public NewsArticleImpl(Context context) {
         this.mContext = context;
     }
 
-    public static NewsArticleImpl getInstance(Context context) {
-        if (mInstance == null) {
-            mInstance = new NewsArticleImpl(context);
-        }
-        return mInstance;
+    @Override
+    public void setBundle(Bundle bundle) {
+        mNewsType = (NewsType) bundle.getSerializable(MainFragment.NEWS_TYPE);
+        mParam = bundle.getString(MainFragment.NEWS_PARAM);
     }
 
     @Override
@@ -79,6 +79,8 @@ public class NewsArticleImpl extends BaseNetImpl implements ArticleModel {
             } else {
 //                url = HttpConfigure.getMoreLatestNews(lastSid);
             }
+        } else if (mNewsType == NewsType.DAILY) {
+            url = HttpConfigure.getDialyRank(mParam);
         } else {
             Log.e("type:" + mNewsType);
         }
