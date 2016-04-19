@@ -14,27 +14,34 @@
             android:id="@+id/nav_monthly_top_ten"
             android:icon="@drawable/ic_menu_manage"
             android:title="Monthly Top 10" />
-        <item
-            android:id="@+id/nav_favorite"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Favorite News" />
+
         <item
             android:id="@+id/nav_daily_rank"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Dialy Rank" />
+
+        <item
+            android:id="@+id/nav_topic"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Topic" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Favorite News" />
+
     </group>
 
-    <!--<item android:title="Communicate">-->
-        <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_share"-->
-                <!--android:icon="@drawable/ic_menu_share"-->
-                <!--android:title="Share" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_send"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="Send" />-->
-        <!--</menu>-->
-    <!--</item>-->
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_setting"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Setting" />
+        </menu>
+    </item>
 
 </menu>

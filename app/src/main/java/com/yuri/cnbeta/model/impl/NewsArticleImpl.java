@@ -77,12 +77,25 @@ public class NewsArticleImpl extends BaseNetImpl implements ArticleModel {
             if (TextUtils.isEmpty(lastSid)) {
                 url = HttpConfigure.getMonthlyTopTen();
             } else {
-//                url = HttpConfigure.getMoreLatestNews(lastSid);
+                //get more
+                return;
             }
         } else if (mNewsType == NewsType.DAILY) {
-            url = HttpConfigure.getDialyRank(mParam);
+            if (TextUtils.isEmpty(lastSid)) {
+                url = HttpConfigure.getDialyRank(mParam);
+            } else {
+                //get more
+                return;
+            }
+        } else if (mNewsType == NewsType.TOPIC) {
+            if (TextUtils.isEmpty(lastSid)) {
+                url = HttpConfigure.getTopicNews(mParam);
+            } else {
+                url = HttpConfigure.getMoreTpicNews(lastSid, mParam);
+            }
         } else {
             Log.e("type:" + mNewsType);
+            return;
         }
         Request<ApiResponse> request = new JsonRequest(url, type);
         request.setCancelSign(MainFragment.class);

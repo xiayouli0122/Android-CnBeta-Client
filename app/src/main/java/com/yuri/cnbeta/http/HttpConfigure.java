@@ -84,17 +84,24 @@ public class HttpConfigure {
     }
 
     /**
-     * @param topicid
+     * 获取主题资讯数据
+     * @param topicid 主题id，详见assets/news_topics.txt
      * @return
      */
-    public static String getTopNews(String topicid) {
+    public static String getTopicNews(String topicid) {
         Map<String, String> paramMap = initParamMap();
         paramMap.put(KEY_METHOD, NEWS_LISTS);
         paramMap.put(KEY_TOPICID, topicid);
         return buildUrl(paramMap);
     }
 
-    public static String getMoreNews(String endSid, String topicid) {
+    /**
+     * 获取更多主题资讯数据
+     * @param endSid 当前列表最后一条数据的sid
+     * @param topicid 主题id
+     * @return
+     */
+    public static String getMoreTpicNews(String endSid, String topicid) {
         Map<String, String> paramMap = initParamMap();
         paramMap.put(KEY_METHOD, NEWS_LISTS);
         paramMap.put(KEY_END_SID, endSid);

@@ -20,6 +20,9 @@ import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.core.BaseListFragment;
 import com.yuri.cnbeta.view.widgets.PullRecycler;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -63,9 +66,6 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
         Log.d("newstype:" + mNewsType.getValue() + ",param:" + param);
 
         mPresenter = new MainFragmentPresenter(getActivity(), getArguments(), this);
-
-//        String dialyRank = HttpConfigure.getDialyRank("comments");
-//        Log.d(dialyRank);
     }
 
     @Override
@@ -160,7 +160,7 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
             mCommentView.setText(article.getComments());
             mCounterView.setText(article.getCounter());
             Glide.with(getActivity())
-                    .load(article.getTopicLogo())
+                    .load(article.getThumb())
                     .centerCrop()
                     .placeholder(R.mipmap.ic_launcher)
                     .crossFade()

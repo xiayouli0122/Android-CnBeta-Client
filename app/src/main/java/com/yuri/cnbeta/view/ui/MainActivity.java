@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     private static final String HOT_COMMENTS_TAG = "hotCommentFragment";
     private static final String MONTHLY_TOP_TEN_TAG = "topTenFragment";
     private static final String DIALY_RANK_TAG = "dialyRankFragment";
+    private static final String TOPIC_TAG = "topicFragment";
 
     private Toolbar mToolbar;
 
@@ -117,6 +118,10 @@ public class MainActivity extends AppCompatActivity
                 tag = DIALY_RANK_TAG;
                 title = "每日排行榜";
                 break;
+            case R.id.nav_topic:
+                tag = TOPIC_TAG;
+                title = "主题";
+                break;
         }
         showFragment(tag);
         mToolbar.setTitle(title);
@@ -146,6 +151,9 @@ public class MainActivity extends AppCompatActivity
                     break;
                 case DIALY_RANK_TAG:
                     showFragment = NewsPageFragment.getInstance(NewsType.DAILY);
+                    break;
+                case TOPIC_TAG:
+                    showFragment = NewsPageFragment.getInstance(NewsType.TOPIC);
                     break;
                 default:
                     Log.e("tag:" + tag);

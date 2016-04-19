@@ -11,9 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.bean.NewsType;
+import com.yuri.cnbeta.model.bean.Topic;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * Created by Yuri on 2016/4/18.
@@ -24,6 +30,7 @@ public class NewsPageFragment extends Fragment {
     private NewsType mNewsType;
 
     private static final String[] RANK_TYPES = {"comments", "dig", "counter"};
+    private Topic mTopic;
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
@@ -46,6 +53,27 @@ public class NewsPageFragment extends Fragment {
 
         mNewsType = (NewsType) getArguments().getSerializable(NEWS_TYPE);
         Log.d("newsType:" + mNewsType);
+
+        if (mNewsType == NewsType.TOPIC) {
+            try {
+                //读取预设好的主题数据
+                InputStream inputStream = getResources().getAssets().open("news_topics.txt");
+
+                int size = inputStream.available();
+
+                byte[] buffer = new byte[size];
+                inputStream.read(buffer);
+                inputStream.close();
+
+                String topicJson = new String(buffer);
+
+                mTopic = new Gson().fromJson(topicJson, Topic.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+
+                Log.e(e.getMessage());
+            }
+        }
     }
 
     @Nullable
@@ -63,8 +91,14 @@ public class NewsPageFragment extends Fragment {
 
         mPagerAdapter = new NewsPagerAdapter(getChildFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setOffscreenPageLimit(3);
         mTabLayout.setupWithViewPager(mViewPager);
+        if (isDialy()) {
+            mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+            mViewPager.setOffscreenPageLimit(3);
+        } else {
+            mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            mViewPager.setOffscreenPageLimit(1);
+        }
     }
 
     public class NewsPagerAdapter extends FragmentStatePagerAdapter {
@@ -76,18 +110,43 @@ public class NewsPageFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return RANK_TYPES[position];
+            if (isDialy()) {
+                return RANK_TYPES[position];
+            } else {
+                return mTopic.topics.get(position).title;
+            }
         }
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = MainFragment.getInstance(mNewsType, RANK_TYPES[position]);
+            String param;
+            Fragment fragment;
+            if (isDialy()) {
+                param = RANK_TYPES[position];
+            } else {
+                if (mTopic == null) {
+                    return null;
+                }
+                param = mTopic.topics.get(position).id;
+            }
+            fragment = MainFragment.getInstance(mNewsType, param);
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return RANK_TYPES.length;
+            if (isDialy()) {
+                return RANK_TYPES.length;
+            } else {
+                if (mTopic != null) {
+                    return mTopic.topics.size();
+                }
+            }
+            return 0;
         }
+    }
+
+    private boolean isDialy() {
+        return mNewsType == NewsType.DAILY;
     }
 }
