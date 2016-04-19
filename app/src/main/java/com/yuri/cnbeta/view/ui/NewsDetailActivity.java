@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
@@ -102,6 +103,8 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 startActivity(intent);
             }
         });
+        mActionButton.setScaleX(0);
+        mActionButton.setScaleY(0);
     }
 
     @Override
@@ -120,8 +123,10 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
         mWebSetting.setJavaScriptEnabled(true);
         mWebSetting.setDomStorageEnabled(true);
         mWebSetting.setLoadsImagesAutomatically(true);
-        WebView.setWebContentsDebuggingEnabled(true);
-        mWebview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+//        mWebview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mWebSetting.setCacheMode(WebSettings.LOAD_DEFAULT);
         mWebSetting.setTextZoom(100);
 
@@ -143,7 +148,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
         String colorString = Integer.toHexString(titleColor);
         String theme = LIGHT;
         boolean showImage = true;
-        boolean convertFlashToHtml5 = false;
+        boolean convertFlashToHtml5 = true;//设置为false，video将不显示以及点击无效
         String data = String.format(Locale.CHINA, WEB_TEMPLATE, colorString.substring(2, colorString.length()),
                 theme, showImage, convertFlashToHtml5, mContent.title, mContent.source,
                 mContent.time, mContent.hometext, mContent.bodytext);
@@ -215,6 +220,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 if (mPresenter.isFavorited(mSID)) {
                     ToastUtil.showToast(getApplicationContext(), "已收藏");
                 } else {
+                    //bug:在页面还没出来的时候，收藏功能应该是不可用的
                     if (mPresenter.doFavorite(mContent, mTopicLogoUrl)) {
                         toolbar.getMenu().findItem(R.id.action_favorite).setTitle("已收藏");
                         ToastUtil.showToast(getApplicationContext(), "收藏成功");
@@ -247,7 +253,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 return;
             }
             view.setBackgroundColor(Color.BLACK);
-            onShowHtmlVideoView(view);
+                onShowHtmlVideoView(view);
             myView = view;
             myCallback = customViewCallback;
         }
@@ -418,5 +424,8 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
         super.onDestroy();
         mPresenter.cancelRequestBySign(NewsDetailActivity.class);
         mPresenter = null;
+
+        mWebview.stopLoading();
+        mWebview.destroy();
     }
 }

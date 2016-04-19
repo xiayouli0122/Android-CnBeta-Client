@@ -159,6 +159,11 @@ public class HttpConfigure {
         return url;
     }
 
+    /**
+     * 生成资讯详情页面Url
+     * @param sid
+     * @return
+     */
     public static String buildArtileUrl(String sid) {
         return String.format(Locale.CHINA, ARTICLE_URL, sid);
     }

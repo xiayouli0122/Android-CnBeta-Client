@@ -45,8 +45,18 @@ public class Content implements Comparable<Content>,Serializable {
 
     @Override
     public String toString() {
-        return title +
-                "\n " + hometext +
-                "\n " + bodytext;
+        return "Content{" +
+                "sid='" + sid + '\'' +
+                ", topic='" + topic + '\'' +
+                ", aid='" + aid + '\'' +
+                ", title='" + title + '\'' +
+                ", hometext='" + hometext + '\'' +
+                ", bodytext='" + bodytext + '\'' +
+                ", source='" + source + '\'' +
+                ", comments='" + comments + '\'' +
+                ", counter='" + counter + '\'' +
+                ", inputtime='" + inputtime + '\'' +
+                ", time='" + time + '\'' +
+                '}';
     }
 }

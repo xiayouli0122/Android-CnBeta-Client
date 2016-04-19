@@ -30,6 +30,7 @@ public class NewsPageFragment extends Fragment {
     private NewsType mNewsType;
 
     private static final String[] RANK_TYPES = {"comments", "dig", "counter"};
+    private static final String[] RANK_TITLES = {"评论", "点击量", "阅读量"};
     private Topic mTopic;
 
     private TabLayout mTabLayout;
@@ -111,7 +112,7 @@ public class NewsPageFragment extends Fragment {
         @Override
         public CharSequence getPageTitle(int position) {
             if (isDialy()) {
-                return RANK_TYPES[position];
+                return RANK_TITLES[position];
             } else {
                 return mTopic.topics.get(position).title;
             }
