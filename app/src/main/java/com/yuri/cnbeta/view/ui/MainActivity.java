@@ -2,6 +2,7 @@ package com.yuri.cnbeta.view.ui;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.Request;
@@ -25,6 +27,8 @@ import com.yuri.cnbeta.http.HttpResponseListener;
 import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.bean.NewsType;
+import com.yuri.cnbeta.view.ui.core.BaseFragment;
+import com.yuri.cnbeta.view.ui.core.BaseListFragment;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
     private FragmentManager mFragmentManager;
 
-    private Fragment mCurrentFragment;//当前选中Fragment
+    private BaseFragment mCurrentFragment;//当前选中Fragment
 
     private static final String MAIN_TAG = "mainFragment";
     private static final String FAVORITE_TAG = "favoriteFragment";
@@ -79,6 +83,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.getMenu().findItem(R.id.nav_latest_news).setChecked(true);
 
         mToolbar.setTitle("最新资讯");
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        assert fab != null;
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCurrentFragment.goTop();
+            }
+        });
     }
 
     @Override
@@ -151,7 +164,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showFragment(String tag) {
-        Fragment showFragment = mFragmentManager.findFragmentByTag(tag);
+        BaseFragment showFragment = (BaseFragment) mFragmentManager.findFragmentByTag(tag);
         if (mCurrentFragment != null) {
             mFragmentManager.beginTransaction().hide(mCurrentFragment).commit();
         }

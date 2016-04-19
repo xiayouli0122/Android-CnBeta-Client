@@ -5,7 +5,10 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
+
+import com.yuri.cnbeta.log.Log;
 
 /**
  * Floating action button extended animation
@@ -28,11 +31,18 @@ public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {
     public void onNestedScroll(CoordinatorLayout coordinatorLayout,
                                FloatingActionButton child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-
         if (dyConsumed > 0 && child.getVisibility() == View.VISIBLE) {
             child.hide();
         } else if (dyConsumed < 0 && child.getVisibility() != View.VISIBLE) {
             child.show();
         }
     }
+
+    @Override
+    public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, FloatingActionButton child, View target) {
+        super.onStopNestedScroll(coordinatorLayout, child, target);
+        Log.d();
+        child.show();
+    }
+
 }

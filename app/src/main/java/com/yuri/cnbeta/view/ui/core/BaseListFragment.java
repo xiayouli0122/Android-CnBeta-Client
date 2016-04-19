@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yuri.cnbeta.R;
+import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.view.adapter.BaseListAdapter;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.widgets.DividerItemDecoration;
@@ -20,7 +21,8 @@ import java.util.List;
  * Created by Stay on 8/3/16.
  * Powered by www.stay4it.com
  */
-public abstract class BaseListFragment<T> extends BaseFragment implements PullRecycler.OnRecyclerRefreshListener {
+public abstract class BaseListFragment<T> extends BaseFragment implements
+        PullRecycler.OnRecyclerRefreshListener {
     protected BaseListAdapter mAdapter;
     protected List<T> mDataList;
     protected PullRecycler mRecycler;
@@ -86,4 +88,12 @@ public abstract class BaseListFragment<T> extends BaseFragment implements PullRe
 
     protected abstract BaseViewHolder getViewHolder(ViewGroup parent, int viewType);
 
+    @Override
+    public void goTop() {
+        if (mRecycler != null) {
+            mRecycler.setSelection(0);
+        } else {
+            Log.e("recycler is null");
+        }
+    }
 }

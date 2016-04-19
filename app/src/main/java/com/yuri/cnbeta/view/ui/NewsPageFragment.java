@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.bean.NewsType;
 import com.yuri.cnbeta.model.bean.Topic;
+import com.yuri.cnbeta.view.ui.core.BaseFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +26,7 @@ import java.util.List;
 /**
  * Created by Yuri on 2016/4/18.
  */
-public class NewsPageFragment extends Fragment {
+public class NewsPageFragment extends BaseFragment {
 
     public static final String NEWS_TYPE = "news_page_news_type";
     private NewsType mNewsType;
@@ -36,6 +38,8 @@ public class NewsPageFragment extends Fragment {
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private NewsPagerAdapter mPagerAdapter;
+
+
 
     public NewsPageFragment() {
     }
@@ -104,6 +108,7 @@ public class NewsPageFragment extends Fragment {
 
     public class NewsPagerAdapter extends FragmentStatePagerAdapter {
 
+        SparseArray<MainFragment> fragments = new SparseArray<>();
 
         public NewsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -121,7 +126,7 @@ public class NewsPageFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             String param;
-            Fragment fragment;
+            MainFragment fragment;
             if (isDialy()) {
                 param = RANK_TYPES[position];
             } else {
@@ -131,7 +136,14 @@ public class NewsPageFragment extends Fragment {
                 param = mTopic.topics.get(position).id;
             }
             fragment = MainFragment.getInstance(mNewsType, param);
+            fragments.put(position, fragment);
             return fragment;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+            fragments.remove(position);
         }
 
         @Override
@@ -145,9 +157,18 @@ public class NewsPageFragment extends Fragment {
             }
             return 0;
         }
+
+        public MainFragment getFragment(int position) {
+            return fragments.get(position);
+        }
     }
 
     private boolean isDialy() {
         return mNewsType == NewsType.DAILY;
+    }
+
+    @Override
+    public void goTop() {
+        mPagerAdapter.getFragment(mViewPager.getCurrentItem()).goTop();
     }
 }
