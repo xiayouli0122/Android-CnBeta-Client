@@ -64,6 +64,7 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
 
         setUpTitle("评论");
         recycler.setRefreshing();
+        recycler.enableLoadMore(true);
     }
 
     @Override
@@ -98,6 +99,7 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
             recycler.onRefreshCompleted();
             return;
         } else if (mDataList != null && mDataList.size() > 0 && commentItemList.size() == 0) {
+            Log.d("no more comments");
             recycler.enableLoadMore(false);
             recycler.onRefreshCompleted();
             return;
@@ -111,11 +113,13 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
             adapter.notifyDataSetChanged();
         }
         recycler.onRefreshCompleted();
-        if (mDataList.size() < mCounters) {
-            recycler.enableLoadMore(true);
-        } else {
-            recycler.enableLoadMore(false);
-        }
+
+        //不需要判断当前评论数量是否比总数小，只需要判断下一次服务器传过来的额数据是否空数据就行
+//        if (mDataList.size() < mCounters) {
+//            recycler.enableLoadMore(true);
+//        } else {
+//            recycler.enableLoadMore(false);
+//        }
     }
 
     @Override

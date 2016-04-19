@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 public class NewsDetailImpl extends BaseNetImpl implements NewsDetailModel {
 
     @Override
-    public void getData(Context context, String sid, final HttpResultListener listener) {
+    public void getData(Context context, final String sid, final HttpResultListener listener) {
         //通过这个API得到的资讯详情数据，如果详情中包含视频模块，则可能会丢失视频相关数据
         //所以我们采用另外一种方法，抓取htm，并解析其中的数据，以拿到一个资讯详情的数据（感谢ywwxhz）
 //        String contentUrl = HttpConfigure.newsContent(sid);
@@ -79,6 +79,7 @@ public class NewsDetailImpl extends BaseNetImpl implements NewsDetailModel {
             @Override
             public void onSuccess(int what, Response<String> response) {
                 Content content = new Content();
+                content.sid = sid;
                 parseHtml(response.get(), content);
                 if (listener != null) {
                     listener.onSuccess(content);
