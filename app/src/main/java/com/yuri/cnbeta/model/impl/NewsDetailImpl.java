@@ -127,6 +127,7 @@ public class NewsDetailImpl extends BaseNetImpl implements NewsDetailModel {
 
     public static final Pattern SN_PATTERN = Pattern.compile("SN:\"(.{5})\"");
     private void parseHtml(String htm, Content item) {
+        Log.d("html");
         Document doc = Jsoup.parse(htm);
         Elements newsHeadlines = doc.select(".body");
         item.title = newsHeadlines.select("#news_title").html().replaceAll("<.*?>", "");

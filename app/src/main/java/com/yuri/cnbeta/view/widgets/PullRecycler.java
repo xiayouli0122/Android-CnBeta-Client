@@ -140,9 +140,12 @@ public class PullRecycler extends FrameLayout implements SwipeRefreshLayout.OnRe
     }
 
     public void setSelection(int position) {
-        mRecyclerView.scrollToPosition(position);
+        mRecyclerView.smoothScrollToPosition(position);
     }
 
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
 
     public interface OnRecyclerRefreshListener {
         void onRefresh(int action);

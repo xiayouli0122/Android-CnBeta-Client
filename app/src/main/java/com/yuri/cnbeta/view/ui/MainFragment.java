@@ -2,6 +2,7 @@ package com.yuri.cnbeta.view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,9 +72,7 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (mDataList != null) {
-            mDataList.clear();
-        }
+
         //启动自动刷新
         mRecycler.setRefreshing();
         if (mNewsType == NewsType.MONTHLY || mNewsType == NewsType.DAILY) {

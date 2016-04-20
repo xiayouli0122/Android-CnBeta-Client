@@ -19,6 +19,7 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
@@ -60,6 +61,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
     private WebSettings mWebSetting;
     private FloatingActionButton mActionButton;
     private AVLoadingIndicatorView mLoadingView;
+    private FrameLayout mFrameLayout;
 
     private static final String WEB_TEMPLATE = "<!DOCTYPE html><html><head><title></title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no\"/>" +
             "<link  rel=\"stylesheet\" href=\"file:///android_asset/style.css\" type=\"text/css\"/><style>.title{color: #%s;}%s</style>" +
@@ -94,6 +96,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
     protected void setUpView() {
         mLoadingView = (AVLoadingIndicatorView) findViewById(R.id.loading_view);
         mWebview = (WebView) findViewById(R.id.webview_details);
+        mFrameLayout = (FrameLayout) findViewById(R.id.content);
         mActionButton = (FloatingActionButton) findViewById(R.id.fab);
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,7 +260,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 return;
             }
             view.setBackgroundColor(Color.BLACK);
-                onShowHtmlVideoView(view);
+            onShowHtmlVideoView(view);
             myView = view;
             myCallback = customViewCallback;
         }
@@ -328,9 +331,17 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
     }
 
     private void onShowHtmlVideoView(View html5VideoView) {
+        Log.d();
+        //全屏展示 video 暂时不支持
+        mFrameLayout.addView(html5VideoView);
+        mWebview.setVisibility(View.GONE);
+        mActionButton.setVisibility(View.GONE);
     }
 
     private void onHideHtmlVideoView(View html5VideoView) {
+        mFrameLayout.removeView(html5VideoView);
+        mWebview.setVisibility(View.VISIBLE);
+        mActionButton.setVisibility(View.VISIBLE);
     }
 
     private class JavaScriptInterface {
