@@ -202,7 +202,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 new ShareAction(this).setDisplayList( displaylist )
                         .withText("分享自帅的不要不要的iPhone7土豪金")
                         .withTitle(mContent.title)
-                        .withTargetUrl(HttpConfigure.buildArtileUrl(mContent.sid))
+                        .withTargetUrl(HttpConfigure.buildMobileViewUrl(mContent.sid))
                         .withMedia(umImage)
                         .setCallback(new UMShareListener() {
                             @Override
@@ -240,7 +240,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setData(Uri.parse(HttpConfigure.buildArtileUrl(mContent.sid)));
+                intent.setData(Uri.parse(HttpConfigure.buildMobileViewUrl(mContent.sid)));
                 startActivity(intent);
                 break;
         }

@@ -46,6 +46,7 @@ public class HttpConfigure {
     private static final String KEY_TID = "tid";
     private static final String KEY_PID = "pid";
 
+    private static final String MOBILE_VIEW_URL = "http://m.cnbeta.com/view/%s.htm";
     private static final String ARTICLE_URL = BASE_URL + "/articles/%s.htm";
 
     public static final Pattern ARTICLE_PATTERN = Pattern.compile("http://www\\.cnbeta\\.com/articles/(\\d+)\\.htm");
@@ -166,6 +167,16 @@ public class HttpConfigure {
      */
     public static String buildArtileUrl(String sid) {
         return String.format(Locale.CHINA, ARTICLE_URL, sid);
+    }
+
+
+    /**
+     * 生成资讯详情页面Url
+     * @param sid
+     * @return
+     */
+    public static String buildMobileViewUrl(String sid) {
+        return String.format(Locale.CHINA, MOBILE_VIEW_URL, sid);
     }
 
     /**
