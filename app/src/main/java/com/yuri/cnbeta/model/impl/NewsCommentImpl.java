@@ -33,7 +33,7 @@ public class NewsCommentImpl extends BaseNetImpl implements NewsCommentModel {
         Log.d("commentUrl:" + commentUrl);
         Type type = new TypeToken<ApiResponse<List<Comment>>>(){}.getType();
         Request<ApiResponse> jsonRequest = new JsonRequest(commentUrl, type);
-        CallServer.getInstance().add(context, 0,
+        CallServer.getInstance().add(0,
                 jsonRequest, new HttpListener<ApiResponse>() {
                     @Override
                     public void onSuccess(int what, Response<ApiResponse> response) {
@@ -103,11 +103,11 @@ public class NewsCommentImpl extends BaseNetImpl implements NewsCommentModel {
                     }
 
                     @Override
-                    public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
+                    public void onFailed(int what, String errorMsg) {
                         if (listener != null) {
-                            listener.onFail(exception.getMessage());
+                            listener.onFail(errorMsg);
                         }
                     }
-                }, true);
+                });
     }
 }

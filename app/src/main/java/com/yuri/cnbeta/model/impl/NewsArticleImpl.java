@@ -16,7 +16,7 @@ import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.model.ArticleModel;
 import com.yuri.cnbeta.model.bean.NewsType;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
-import com.yuri.cnbeta.view.ui.MainFragment;
+import com.yuri.cnbeta.news.MainFragment;
 import com.yuri.xlog.Log;
 
 import java.lang.reflect.Type;
@@ -98,7 +98,7 @@ public class NewsArticleImpl extends BaseNetImpl implements ArticleModel {
         }
         Request<ApiResponse> request = new JsonRequest(url, type);
         request.setCancelSign(MainFragment.class);
-        CallServer.getInstance().add(context, 0, request, new HttpListener<ApiResponse>() {
+        CallServer.getInstance().add(0, request, new HttpListener<ApiResponse>() {
             @Override
             public void onSuccess(int what, Response<ApiResponse> response) {
                 ApiResponse<List<Article>> apiResponse = response.get();
@@ -111,12 +111,14 @@ public class NewsArticleImpl extends BaseNetImpl implements ArticleModel {
                     listener.onSuccess(articleList);
                 }
             }
+
             @Override
-            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
+            public void onFailed(int what, String errorMsg) {
                 if (listener != null) {
-                    listener.onFail(exception.getMessage());
+                    listener.onFail(errorMsg);
                 }
             }
-        }, true);
+
+        });
     }
 }

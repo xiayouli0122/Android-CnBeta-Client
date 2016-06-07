@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view.ui;
+package com.yuri.cnbeta.news;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +10,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.contract.MainFragmentContract;
 import com.yuri.cnbeta.http.response.Article;
 import com.yuri.cnbeta.model.bean.NewsType;
-import com.yuri.cnbeta.presenter.MainFragmentPresenter;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
+import com.yuri.cnbeta.newsdetial.NewsDetailActivity;
 import com.yuri.cnbeta.view.ui.base.BaseListFragment;
 import com.yuri.cnbeta.view.widgets.PullRecycler;
 import com.yuri.xlog.Log;
@@ -25,16 +24,18 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
+ * 新闻列表界面
  * Created by Yuri on 2016/4/7.
  */
-public class MainFragment extends BaseListFragment<Article> implements MainFragmentContract.View {
+public class MainFragment extends BaseListFragment<Article> implements MainContract.View {
 
     public static final String NEWS_TYPE = "mainfragment.news_type";
     public static final String NEWS_PARAM = "mainfragment.news_param";
-    private MainFragmentPresenter mPresenter;
+    private MainPresenter mPresenter;
     private String mLastSid;
 
     private NewsType mNewsType;
+    private String mParam;
 
     public static MainFragment getInstance(NewsType newsType) {
         Bundle bundle = new Bundle();
@@ -56,18 +57,15 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mNewsType = (NewsType) getArguments().getSerializable(NEWS_TYPE);
-        String param = getArguments().getString(NEWS_PARAM);
-        Log.d("newstype:" + mNewsType.getValue() + ",param:" + param);
-
-        mPresenter = new MainFragmentPresenter(getActivity(), getArguments(), this);
+        mParam = getArguments().getString(NEWS_PARAM);
+        Log.d("newstype:" + mNewsType.getValue() + ",param:" + mParam);
+        mPresenter = new MainPresenter(this);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         //启动自动刷新
         mRecycler.setRefreshing();
         if (mNewsType == NewsType.MONTHLY || mNewsType == NewsType.DAILY) {
@@ -90,10 +88,10 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
         switch (action) {
             case PullRecycler.ACTION_PULL_TO_REFRESH:
             case PullRecycler.ACTION_IDLE:
-                mPresenter.getData();
+                mPresenter.getNews(mNewsType, mParam, null);
                 break;
             case PullRecycler.ACTION_LOAD_MORE_REFRESH:
-                mPresenter.getMoreData(mLastSid);
+                mPresenter.getNews(mNewsType, mParam, mLastSid);
                 break;
         }
     }
@@ -139,9 +137,8 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
         @Bind(R.id.tv_news_comment_count)
         TextView mCommentView;//评论数
 
-        public SampleViewHolder(View itemView) {
+        SampleViewHolder(View itemView) {
             super(itemView);
-
             ButterKnife.bind(this, itemView);
         }
 
@@ -165,7 +162,6 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
         public void onItemClick(View view, int position) {
             Article article = mDataList.get(position);
             Log.d("" + article.getSid());
-
             Intent intent = NewsDetailActivity.getIntent(getActivity(), article.getSid(), article.getTopicLogo());
             startActivity(intent);
         }
@@ -175,6 +171,6 @@ public class MainFragment extends BaseListFragment<Article> implements MainFragm
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.cancelRequestBySign(MainFragment.class);
+        mPresenter.cancelRequest();
     }
 }

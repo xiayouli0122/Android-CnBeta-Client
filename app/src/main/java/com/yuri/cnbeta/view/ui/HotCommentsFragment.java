@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.contract.HotCommentContract;
 import com.yuri.cnbeta.http.response.HotComment;
+import com.yuri.cnbeta.newsdetial.NewsDetailActivity;
 import com.yuri.cnbeta.presenter.HotCommentPresenter;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.base.BaseListFragment;

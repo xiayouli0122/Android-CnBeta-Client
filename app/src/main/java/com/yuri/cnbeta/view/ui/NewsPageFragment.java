@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.yuri.cnbeta.R;
+import com.yuri.cnbeta.news.MainFragment;
 import com.yuri.cnbeta.model.bean.NewsType;
 import com.yuri.cnbeta.model.bean.Topic;
 import com.yuri.cnbeta.view.ui.base.BaseFragment;

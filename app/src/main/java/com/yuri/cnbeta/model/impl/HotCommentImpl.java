@@ -29,7 +29,7 @@ public class HotCommentImpl extends BaseNetImpl implements HotCommentModel {
         Request<ApiResponse> request = new JsonRequest(HttpConfigure.hotComments(), type);
         request.setCancelSign(HotCommentsFragment.class);
 
-        CallServer.getInstance().add(context, 0, request, new HttpListener<ApiResponse>() {
+        CallServer.getInstance().add(0, request, new HttpListener<ApiResponse>() {
             @Override
             public void onSuccess(int what, Response<ApiResponse> response) {
                 ApiResponse<List<com.yuri.cnbeta.http.response.HotComment>> apiResponse = response.get();
@@ -39,12 +39,13 @@ public class HotCommentImpl extends BaseNetImpl implements HotCommentModel {
                     listener.onSuccess(hotCommentList);
                 }
             }
+
             @Override
-            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
+            public void onFailed(int what, String errorMsg) {
                 if (listener != null) {
-                    listener.onFail(exception.getMessage());
+                    listener.onFail(errorMsg);
                 }
             }
-        }, true);
+        });
     }
 }

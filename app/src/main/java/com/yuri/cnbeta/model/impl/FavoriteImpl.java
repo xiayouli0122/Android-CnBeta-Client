@@ -1,7 +1,7 @@
 package com.yuri.cnbeta.model.impl;
 
 import com.activeandroid.query.Select;
-import com.yuri.cnbeta.db.NewsItem;
+import com.yuri.cnbeta.db.model.NewsItem;
 import com.yuri.cnbeta.model.FavoriteModel;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
 

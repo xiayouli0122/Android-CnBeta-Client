@@ -3,7 +3,7 @@ package com.yuri.cnbeta.presenter;
 import android.content.Context;
 
 import com.yuri.cnbeta.contract.FavoriteContract;
-import com.yuri.cnbeta.db.NewsItem;
+import com.yuri.cnbeta.db.model.NewsItem;
 import com.yuri.cnbeta.model.FavoriteModel;
 import com.yuri.cnbeta.model.impl.FavoriteImpl;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;

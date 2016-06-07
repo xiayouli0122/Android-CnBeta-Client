@@ -20,18 +20,12 @@ import java.net.ProtocolException;
  */
 public class HttpResponseListener<T> implements OnResponseListener<T> {
 
-    private Context mContext;
-
-    private Request<?> mRequest;
-
     /**
      * 结果回调
      */
     private HttpListener<T> mCallBack;
 
-    public HttpResponseListener(Context context, Request<?> mRequest, HttpListener<T> httpListener, boolean canCancel) {
-        this.mContext = context;
-        this.mRequest = mRequest;
+    public HttpResponseListener(HttpListener<T> httpListener) {
         this.mCallBack = httpListener;
     }
 
@@ -52,24 +46,24 @@ public class HttpResponseListener<T> implements OnResponseListener<T> {
     public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMillis) {
 
         if (exception instanceof NetworkError) {// 网络不好
-            ToastUtil.showToast(mContext, "请检查网络。");
+//            ToastUtil.showToast(mContext, "请检查网络。");
         } else if (exception instanceof TimeoutError) {// 请求超时
-            ToastUtil.showToast(mContext, "请求超时，网络不好或者服务器不稳定。");
+//            ToastUtil.showToast(mContext, "请求超时，网络不好或者服务器不稳定。");
         } else if (exception instanceof UnKnownHostError) {// 找不到服务器
-            ToastUtil.showToast(mContext, "未发现指定服务器。");
+//            ToastUtil.showToast(mContext, "未发现指定服务器。");
         } else if (exception instanceof URLError) {// URL是错的
-            ToastUtil.showToast(mContext, "URL错误。");
+//            ToastUtil.showToast(mContext, "URL错误。");
         } else if (exception instanceof NotFoundCacheError) {
             // 这个异常只会在仅仅查找缓存时没有找到缓存时返回
-            ToastUtil.showToast(mContext, "没有发现缓存。");
+//            ToastUtil.showToast(mContext, "没有发现缓存。");
         } else if (exception instanceof ProtocolException) {
-            ToastUtil.showToast(mContext, "系统不支持的请求方式。");
+//            ToastUtil.showToast(mContext, "系统不支持的请求方式。");
         } else {
-            ToastUtil.showToast(mContext, "未知错误。");
+//            ToastUtil.showToast(mContext, "未知错误。");
         }
         Log.e("错误：" + exception.getMessage());
         if (mCallBack != null)
-            mCallBack.onFailed(what, url, tag, exception, responseCode, networkMillis);
+            mCallBack.onFailed(what, exception.getMessage());
 
     }
 

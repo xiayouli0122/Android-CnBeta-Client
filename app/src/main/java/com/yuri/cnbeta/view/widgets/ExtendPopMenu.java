@@ -45,7 +45,7 @@ public class ExtendPopMenu extends PopupMenu {
                         String supportUrl = HttpConfigure.voteComment("support", commentItem.sid, commentItem.tid);
                         //against
                         final Request<ApiResponse> request = new JsonRequest(supportUrl, type);
-                        CallServer.getInstance().add(mContext, 0, request, new HttpListener<ApiResponse>() {
+                        CallServer.getInstance().add(0, request, new HttpListener<ApiResponse>() {
                             @Override
                             public void onSuccess(int what, Response<ApiResponse> response) {
                                 ApiResponse<String> apiResponse = response.get();
@@ -53,10 +53,9 @@ public class ExtendPopMenu extends PopupMenu {
                             }
 
                             @Override
-                            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
-
+                            public void onFailed(int what, String errorMsg) {
                             }
-                        }, true);
+                        });
 //                        NetKit.getInstance().setCommentAction("support", commentItem.getSid()+"", commentItem.getTid(), token, chandler);
                         break;
                     case R.id.comment_against:
@@ -66,7 +65,7 @@ public class ExtendPopMenu extends PopupMenu {
                         String againstUrl = HttpConfigure.voteComment("against", commentItem.sid, commentItem.tid);
                         //against
                         final Request<ApiResponse> request1 = new JsonRequest(againstUrl, type1);
-                        CallServer.getInstance().add(mContext, 0, request1, new HttpListener<ApiResponse>() {
+                        CallServer.getInstance().add(0, request1, new HttpListener<ApiResponse>() {
                             @Override
                             public void onSuccess(int what, Response<ApiResponse> response) {
                                 ApiResponse<String> apiResponse = response.get();
@@ -74,10 +73,9 @@ public class ExtendPopMenu extends PopupMenu {
                             }
 
                             @Override
-                            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
-
+                            public void onFailed(int what, String errorMsg) {
                             }
-                        }, true);
+                        });
                         break;
                     case R.id.comment_report:
                         action = REPORT;
@@ -87,7 +85,7 @@ public class ExtendPopMenu extends PopupMenu {
                         String reporttUrl = HttpConfigure.voteComment("report", commentItem.sid, commentItem.tid);
                         //against
                         final Request<ApiResponse> request2 = new JsonRequest(reporttUrl, type2);
-                        CallServer.getInstance().add(mContext, 0, request2, new HttpListener<ApiResponse>() {
+                        CallServer.getInstance().add(0, request2, new HttpListener<ApiResponse>() {
                             @Override
                             public void onSuccess(int what, Response<ApiResponse> response) {
                                 ApiResponse<String> apiResponse = response.get();
@@ -95,10 +93,10 @@ public class ExtendPopMenu extends PopupMenu {
                             }
 
                             @Override
-                            public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
+                            public void onFailed(int what, String errorMsg) {
 
                             }
-                        }, true);
+                        });
                         break;
                     case R.id.comment_replay:
                         Log.d("reply");

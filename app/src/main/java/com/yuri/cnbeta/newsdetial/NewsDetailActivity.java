@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view.ui;
+package com.yuri.cnbeta.newsdetial;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,13 +25,13 @@ import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.rest.Request;
 import com.yolanda.nohttp.rest.Response;
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.contract.NewsDetailContract;
 import com.yuri.cnbeta.http.CallServer;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
 import com.yuri.cnbeta.http.response.Content;
-import com.yuri.cnbeta.presenter.NewsDetailPresenter;
 import com.yuri.cnbeta.utils.ToastUtil;
+import com.yuri.cnbeta.view.ui.ImageActivity;
+import com.yuri.cnbeta.view.ui.NewsCommentActivity;
 import com.yuri.cnbeta.view.ui.base.BaseActivity;
 import com.yuri.cnbeta.view.widgets.AVLoadingIndicatorView.AVLoadingIndicatorView;
 import com.yuri.xlog.Log;
@@ -46,8 +46,8 @@ import java.util.regex.Matcher;
  */
 public class NewsDetailActivity extends BaseActivity implements NewsDetailContract.View {
 
-    public static final String EXTRA_SID = "extra_sid";
-    public static final String EXTRA_TOPIC_LOGO = "extra_topic_logo";
+    private static final String EXTRA_SID = "extra_sid";
+    private static final String EXTRA_TOPIC_LOGO = "extra_topic_logo";
 
     private String mSID;
     private String mTopicLogoUrl;
@@ -112,7 +112,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
     @Override
     protected void setUpData() {
 
-        mPresenter = new NewsDetailPresenter(getApplicationContext(), this);
+        mPresenter = new NewsDetailPresenter(this);
 
         mSID = getIntent().getStringExtra(EXTRA_SID);
         mTopicLogoUrl = getIntent().getStringExtra(EXTRA_TOPIC_LOGO);
@@ -142,7 +142,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
             toolbar.getMenu().findItem(R.id.action_favorite).setTitle("已收藏");
         }
 
-        mPresenter.getData(mSID);
+        mPresenter.getDetailData(mSID);
     }
 
     private void bindData() {
@@ -355,7 +355,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 @Override
                 public void run() {
                     Request<String> stringRequest = NoHttp.createStringRequest(requestUrl);
-                    CallServer.getInstance().add(getApplicationContext(), 0, stringRequest, new HttpListener<String>(){
+                    CallServer.getInstance().add(0, stringRequest, new HttpListener<String>(){
 
                         @Override
                         public void onSuccess(int what, Response<String> response) {
@@ -363,10 +363,11 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                         }
 
                         @Override
-                        public void onFailed(int what, String url, Object tag, Exception exception, int responseCode, long networkMills) {
+                        public void onFailed(int what, String errorMsg) {
 
                         }
-                    }, true);
+
+                    });
 //                    NetKit.getAsyncClient().get(requestUrl, new JsonHttpResponseHandler() {
 //                        @Override
 //                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -405,7 +406,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.cancelRequestBySign(NewsDetailActivity.class);
+        mPresenter.cancelRequest();
         mPresenter = null;
 
         mWebview.stopLoading();

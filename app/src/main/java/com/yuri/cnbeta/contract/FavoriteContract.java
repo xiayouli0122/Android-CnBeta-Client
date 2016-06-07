@@ -1,7 +1,6 @@
 package com.yuri.cnbeta.contract;
 
-import com.yuri.cnbeta.db.NewsItem;
-import com.yuri.cnbeta.presenter.BasePresenter;
+import com.yuri.cnbeta.db.model.NewsItem;
 import com.yuri.cnbeta.presenter.BasePresenterInterface;
 import com.yuri.cnbeta.view.BaseView;
 
