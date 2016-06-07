@@ -2,23 +2,18 @@ package com.yuri.cnbeta.view.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -30,10 +25,10 @@ import com.linroid.filtermenu.library.FilterMenu;
 import com.linroid.filtermenu.library.FilterMenuLayout;
 import com.yuri.cnbeta.BuildConfig;
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.utils.FileUtils;
 import com.yuri.cnbeta.utils.ToastUtil;
 import com.yuri.cnbeta.view.widgets.FixViewPager;
+import com.yuri.xlog.Log;
 
 import java.io.File;
 import java.io.IOException;

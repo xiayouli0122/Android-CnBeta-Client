@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.yuri.cnbeta.log.Log;
+import com.yuri.xlog.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,26 +26,6 @@ public class Utils {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(time);
         return format.format(date);
-    }
-
-    /**
-     * 获取应用版本号
-     *
-     * @param context
-     * @return 当前版本号
-     * @throws PackageManager.NameNotFoundException
-     */
-    public static String getAppVersion(Context context) {
-        String version = "";
-        try {
-            PackageManager packageManager = context.getPackageManager();
-            PackageInfo packInfo = packageManager.getPackageInfo(
-                    context.getPackageName(), 0);
-            version = packInfo.versionName;
-        } catch (Exception e) {
-            Log.e(e.toString());
-        }
-        return version;
     }
 
     public static int getVersionCode(Context context) {

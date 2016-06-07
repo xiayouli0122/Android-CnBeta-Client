@@ -21,25 +21,20 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
-import com.umeng.socialize.ShareAction;
-import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.media.UMImage;
 import com.yolanda.nohttp.NoHttp;
-import com.yolanda.nohttp.Request;
-import com.yolanda.nohttp.Response;
+import com.yolanda.nohttp.rest.Request;
+import com.yolanda.nohttp.rest.Response;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.contract.NewsDetailContract;
 import com.yuri.cnbeta.http.CallServer;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
-import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.presenter.NewsDetailPresenter;
 import com.yuri.cnbeta.utils.ToastUtil;
-import com.yuri.cnbeta.view.ui.core.BaseActivity;
+import com.yuri.cnbeta.view.ui.base.BaseActivity;
 import com.yuri.cnbeta.view.widgets.AVLoadingIndicatorView.AVLoadingIndicatorView;
+import com.yuri.xlog.Log;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -193,35 +188,15 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
-                        {
-                                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,SHARE_MEDIA.SINA,
-                                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
-                        };
-                UMImage umImage = new UMImage(this, mTopicLogoUrl);
-                new ShareAction(this).setDisplayList( displaylist )
-                        .withText("分享自帅的不要不要的iPhone7土豪金")
-                        .withTitle(mContent.title)
-                        .withTargetUrl(HttpConfigure.buildMobileViewUrl(mContent.sid))
-                        .withMedia(umImage)
-                        .setCallback(new UMShareListener() {
-                            @Override
-                            public void onResult(SHARE_MEDIA share_media) {
-                                Log.d("" + share_media.name());
-                            }
-
-                            @Override
-                            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-                                throwable.printStackTrace();
-                                Log.d("" + share_media.name());
-                            }
-
-                            @Override
-                            public void onCancel(SHARE_MEDIA share_media) {
-                                Log.d("" + share_media.name());
-                            }
-                        })
-                        .open();
+                String content = mContent.title + " "
+                        + HttpConfigure.buildMobileViewUrl(mContent.sid)
+                        + "\r\n(分享自YuriCnBeta)";
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, content);
+                intent.setType("text/plain");
+                //设置分享列表的标题，并且每次都显示分享列表
+                startActivity(Intent.createChooser(intent, "分享到"));
                 break;
             case R.id.action_favorite:
                 if (mPresenter.isFavorited(mSID)) {
@@ -237,11 +212,11 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 }
                 break;
             case R.id.action_view_in_browser:
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setData(Uri.parse(HttpConfigure.buildMobileViewUrl(mContent.sid)));
-                startActivity(intent);
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_VIEW);
+                shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                shareIntent.setData(Uri.parse(HttpConfigure.buildMobileViewUrl(mContent.sid)));
+                startActivity(shareIntent);
                 break;
         }
         return super.onMenuItemClick(item);
@@ -425,13 +400,6 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
             });
         }
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //QQ，QQZONE分享需要增加这个代码，否则无法分享成功
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

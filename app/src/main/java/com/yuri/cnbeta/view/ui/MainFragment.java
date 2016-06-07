@@ -2,7 +2,6 @@ package com.yuri.cnbeta.view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +11,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.contract.MainFragmentContract;
-import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.response.Article;
-import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.bean.NewsType;
 import com.yuri.cnbeta.presenter.MainFragmentPresenter;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
-import com.yuri.cnbeta.view.ui.core.BaseListFragment;
+import com.yuri.cnbeta.view.ui.base.BaseListFragment;
 import com.yuri.cnbeta.view.widgets.PullRecycler;
+import com.yuri.xlog.Log;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;

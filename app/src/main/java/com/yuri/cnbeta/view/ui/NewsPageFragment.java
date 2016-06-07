@@ -14,16 +14,16 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.bean.NewsType;
 import com.yuri.cnbeta.model.bean.Topic;
-import com.yuri.cnbeta.view.ui.core.BaseFragment;
+import com.yuri.cnbeta.view.ui.base.BaseFragment;
+import com.yuri.xlog.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 /**
+ *
  * Created by Yuri on 2016/4/18.
  */
 public class NewsPageFragment extends BaseFragment {

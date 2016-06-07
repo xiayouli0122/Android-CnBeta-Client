@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view.ui.core;
+package com.yuri.cnbeta.view.ui.base;
 
 /**
  * Created by Yuri on 2016/4/19.

@@ -1,11 +1,9 @@
 package com.yuri.cnbeta.view.ui;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,32 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.yolanda.nohttp.NoHttp;
-import com.yolanda.nohttp.Request;
-import com.yolanda.nohttp.RequestMethod;
-import com.yolanda.nohttp.Response;
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.http.CallServer;
-import com.yuri.cnbeta.http.HttpConfigure;
-import com.yuri.cnbeta.http.HttpListener;
-import com.yuri.cnbeta.http.HttpResponseListener;
-import com.yuri.cnbeta.http.response.Content;
-import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.bean.NewsType;
-import com.yuri.cnbeta.view.ui.core.BaseFragment;
-import com.yuri.cnbeta.view.ui.core.BaseListFragment;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
-import org.jsoup.select.Elements;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.yuri.cnbeta.view.ui.base.BaseFragment;
+import com.yuri.xlog.Log;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

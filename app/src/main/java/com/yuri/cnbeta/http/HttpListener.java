@@ -1,7 +1,6 @@
 package com.yuri.cnbeta.http;
 
-import com.yolanda.nohttp.Response;
-import com.yuri.cnbeta.http.response.ApiResponse;
+import com.yolanda.nohttp.rest.Response;
 
 /**
  * 接收回调结果

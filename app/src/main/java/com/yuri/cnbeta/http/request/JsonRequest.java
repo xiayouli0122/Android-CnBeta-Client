@@ -3,12 +3,10 @@ package com.yuri.cnbeta.http.request;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.yolanda.nohttp.Headers;
-import com.yolanda.nohttp.JsonArrayRequest;
-import com.yolanda.nohttp.JsonObjectRequest;
 import com.yolanda.nohttp.Logger;
-import com.yolanda.nohttp.RestRequest;
+import com.yolanda.nohttp.rest.JsonObjectRequest;
+import com.yolanda.nohttp.rest.RestRequest;
 import com.yolanda.nohttp.tools.HeaderParser;
 import com.yuri.cnbeta.http.response.ApiResponse;
 

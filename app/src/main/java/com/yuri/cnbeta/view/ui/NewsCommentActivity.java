@@ -12,18 +12,17 @@ import android.widget.TextView;
 
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.contract.NewsCommentContract;
-import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.bean.CommentItem;
 import com.yuri.cnbeta.presenter.NewsCommentPresenter;
 import com.yuri.cnbeta.utils.SpannableStringUtils;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
-import com.yuri.cnbeta.view.ui.core.BaseListActivity;
+import com.yuri.cnbeta.view.ui.base.BaseListActivity;
 import com.yuri.cnbeta.view.widgets.ExtendPopMenu;
 import com.yuri.cnbeta.view.widgets.PullRecycler;
 import com.yuri.cnbeta.view.widgets.textdrawable.TextDrawable;
 import com.yuri.cnbeta.view.widgets.textdrawable.util.ColorGenerator;
+import com.yuri.xlog.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -31,6 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
+ * 评论界面
  * Created by Yuri on 2016/4/11.
  */
 public class NewsCommentActivity extends BaseListActivity<CommentItem> implements NewsCommentContract.View {
@@ -154,7 +154,7 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
 
         private ExtendPopMenu mPopMenu;
 
-        public SampleViewHolder(View itemView) {
+        SampleViewHolder(View itemView) {
             super(itemView);
 
             ButterKnife.bind(this, itemView);

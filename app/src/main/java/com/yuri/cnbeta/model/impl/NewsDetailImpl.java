@@ -3,22 +3,19 @@ package com.yuri.cnbeta.model.impl;
 import android.content.Context;
 
 import com.activeandroid.query.Select;
-import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.NoHttp;
-import com.yolanda.nohttp.Request;
 import com.yolanda.nohttp.RequestMethod;
-import com.yolanda.nohttp.Response;
+import com.yolanda.nohttp.rest.Request;
+import com.yolanda.nohttp.rest.Response;
 import com.yuri.cnbeta.db.NewsItem;
 import com.yuri.cnbeta.http.CallServer;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
-import com.yuri.cnbeta.http.request.JsonRequest;
-import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.http.response.Content;
-import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.NewsDetailModel;
 import com.yuri.cnbeta.model.listener.HttpResultListener;
 import com.yuri.cnbeta.view.ui.NewsDetailActivity;
+import com.yuri.xlog.Log;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,10 +23,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

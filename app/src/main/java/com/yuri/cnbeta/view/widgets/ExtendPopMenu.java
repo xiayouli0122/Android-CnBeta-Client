@@ -6,17 +6,17 @@ import android.view.View;
 import android.widget.PopupMenu;
 
 import com.google.gson.reflect.TypeToken;
-import com.yolanda.nohttp.Request;
-import com.yolanda.nohttp.Response;
+import com.yolanda.nohttp.rest.Request;
+import com.yolanda.nohttp.rest.Response;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.http.CallServer;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
 import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
-import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.bean.CommentItem;
 import com.yuri.cnbeta.view.adapter.BaseListAdapter;
+import com.yuri.xlog.Log;
 
 import java.lang.reflect.Type;
 

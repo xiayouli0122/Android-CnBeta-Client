@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view.ui.core;
+package com.yuri.cnbeta.view.ui.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
@@ -12,7 +12,6 @@ import com.yuri.cnbeta.view.widgets.PullRecycler;
 import com.yuri.cnbeta.view.widgets.layoutmanager.ILayoutManager;
 import com.yuri.cnbeta.view.widgets.layoutmanager.MyLinearLayoutManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

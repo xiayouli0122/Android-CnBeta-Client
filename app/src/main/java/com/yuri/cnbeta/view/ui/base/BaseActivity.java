@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view.ui.core;
+package com.yuri.cnbeta.view.ui.base;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

@@ -12,10 +12,10 @@ import com.bumptech.glide.Glide;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.contract.FavoriteContract;
 import com.yuri.cnbeta.db.NewsItem;
-import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.presenter.FavoritePresenter;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
-import com.yuri.cnbeta.view.ui.core.BaseListFragment;
+import com.yuri.cnbeta.view.ui.base.BaseListFragment;
+import com.yuri.xlog.Log;
 
 import java.util.List;
 
@@ -23,6 +23,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
+ * 收藏界面
  * Created by Yuri on 2016/4/14.
  */
 public class FavoriteFragment extends BaseListFragment<NewsItem> implements FavoriteContract.View {

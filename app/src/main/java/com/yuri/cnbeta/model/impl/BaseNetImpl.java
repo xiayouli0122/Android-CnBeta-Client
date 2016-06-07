@@ -1,8 +1,8 @@
 package com.yuri.cnbeta.model.impl;
 
 import com.yuri.cnbeta.http.CallServer;
-import com.yuri.cnbeta.log.Log;
 import com.yuri.cnbeta.model.BaseNetModel;
+import com.yuri.xlog.Log;
 
 /**
  * Created by Yuri on 2016/4/13.
