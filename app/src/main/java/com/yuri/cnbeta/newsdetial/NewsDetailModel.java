@@ -1,11 +1,15 @@
 package com.yuri.cnbeta.newsdetial;
 
+import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.RequestMethod;
+import com.yolanda.nohttp.error.URLError;
 import com.yolanda.nohttp.rest.Request;
 import com.yolanda.nohttp.rest.Response;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
+import com.yuri.cnbeta.http.request.JsonRequest;
+import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.model.listener.HttpResultListener;
 import com.yuri.xlog.Log;
@@ -16,6 +20,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
+import java.lang.reflect.Type;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,16 +30,47 @@ import java.util.regex.Pattern;
  */
 public class NewsDetailModel extends NewsDetailContract.Model {
 
+    /**
+     * 使用官方api获取新闻详情数据，如果详情中包含视频模块，则可能会丢失视频相关数据
+     * @param sid news id
+     * @param listener call back
+     */
+    @Override
+    void getDetailDataApi(String sid, final HttpResultListener<Content> listener) {
+        String contentUrl = HttpConfigure.newsContent(sid);
+        Type type = new TypeToken<ApiResponse<Content>>() {}.getType();
+        Request<ApiResponse> request = new JsonRequest(contentUrl, type);
+        addRequest(contentUrl, request);
+        request(request, new HttpListener<ApiResponse>() {
+            @Override
+            public void onSuccess(int what, Response<ApiResponse> response) {
+                ApiResponse<Content> apiResponse = response.get();
+                Content content = apiResponse.result;
+                if (listener != null) {
+                    listener.onSuccess(content);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, String errorMsg) {
+                if (listener != null) {
+                    listener.onFail(errorMsg);
+                }
+            }
+        });
+    }
+
+    /**
+     * 抓取htm，并解析其中的数据，以拿到一个资讯详情的数据（感谢ywwxhz）
+     * 但是这个解析拿不到评论条数
+     * @param sid news id
+     * @param listener call back
+     */
     @Override
     public void getDetailData(final String sid, final HttpResultListener listener) {
-        //通过这个API得到的资讯详情数据，如果详情中包含视频模块，则可能会丢失视频相关数据
-        //官方客户端就是使用的api获取数据的，然后你发现详情页本来有视频的却都无法显示
-//        String contentUrl = HttpConfigure.newsContent(sid);
-        //所以我们采用另外一种方法，抓取htm，并解析其中的数据，以拿到一个资讯详情的数据（感谢ywwxhz）
-        //但是这个解析拿不到评论条数
-        //方法二
+        //PC端网页地址
 //        String url = HttpConfigure.buildArtileUrl(sid);
-        //去获取cnbeta移动版网页的数据
+        //移动版网页地址
         String url = HttpConfigure.buildMobileViewUrl(sid);
         Log.d("contentUrl:" + url);
         RequestMethod requestMethod = RequestMethod.GET;

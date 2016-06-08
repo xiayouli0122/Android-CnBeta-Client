@@ -9,6 +9,7 @@ import com.yolanda.nohttp.rest.JsonObjectRequest;
 import com.yolanda.nohttp.rest.RestRequest;
 import com.yolanda.nohttp.tools.HeaderParser;
 import com.yuri.cnbeta.http.response.ApiResponse;
+import com.yuri.xlog.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
@@ -23,11 +24,13 @@ public class JsonRequest extends RestRequest<ApiResponse> {
     public JsonRequest(String url, Type type) {
         super(url);
         mType = type;
+        Log.net("url:%s", url);
     }
 
     @Override
     public ApiResponse parseResponse(String url, Headers responseHeaders, byte[] responseBody) {
         String jsonString = parseResponseString(url, responseHeaders, responseBody);
+        Log.json(jsonString);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
         Gson gson = gsonBuilder.create();

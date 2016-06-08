@@ -53,7 +53,6 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
     private String mTopicLogoUrl;
 
     private WebView mWebview;
-    private WebSettings mWebSetting;
     private FloatingActionButton mActionButton;
     private AVLoadingIndicatorView mLoadingView;
     private FrameLayout mFrameLayout;
@@ -118,19 +117,19 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
         mTopicLogoUrl = getIntent().getStringExtra(EXTRA_TOPIC_LOGO);
         Log.d("sid:" + mSID);
 
-        mWebSetting = mWebview.getSettings();
-        mWebSetting.setSupportZoom(false);
-        mWebSetting.setAllowFileAccess(true);
-        mWebSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
-        mWebSetting.setJavaScriptEnabled(true);
-        mWebSetting.setDomStorageEnabled(true);
-        mWebSetting.setLoadsImagesAutomatically(true);
+        WebSettings webSettings = mWebview.getSettings();
+        webSettings.setSupportZoom(false);
+        webSettings.setAllowFileAccess(true);
+        webSettings.setPluginState(WebSettings.PluginState.ON_DEMAND);
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setLoadsImagesAutomatically(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-//        mWebview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        mWebSetting.setCacheMode(WebSettings.LOAD_DEFAULT);
-        mWebSetting.setTextZoom(100);
+        mWebview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        webSettings.setTextZoom(100);
 
         mWebview.addJavascriptInterface(new JavaScriptInterface(this), "Interface");
         mWebview.setWebChromeClient(new VideoWebChromeClient());
@@ -190,13 +189,13 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
             case R.id.action_share:
                 String content = mContent.title + " "
                         + HttpConfigure.buildMobileViewUrl(mContent.sid)
-                        + "\r\n(分享自YuriCnBeta)";
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, content);
-                intent.setType("text/plain");
+                        + "\r\n(分享自Yuri CnBeta客户端)";
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, content);
+                shareIntent.setType("text/plain");
                 //设置分享列表的标题，并且每次都显示分享列表
-                startActivity(Intent.createChooser(intent, "分享到"));
+                startActivity(Intent.createChooser(shareIntent, "分享到"));
                 break;
             case R.id.action_favorite:
                 if (mPresenter.isFavorited(mSID)) {
@@ -212,11 +211,11 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 }
                 break;
             case R.id.action_view_in_browser:
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_VIEW);
-                shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                shareIntent.setData(Uri.parse(HttpConfigure.buildMobileViewUrl(mContent.sid)));
-                startActivity(shareIntent);
+                Intent viewIntent = new Intent();
+                viewIntent.setAction(Intent.ACTION_VIEW);
+                viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                viewIntent.setData(Uri.parse(HttpConfigure.buildMobileViewUrl(mContent.sid)));
+                startActivity(viewIntent);
                 break;
         }
         return super.onMenuItemClick(item);
@@ -321,11 +320,9 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
 
     private class JavaScriptInterface {
         Context mContext;
-        private Handler myHandler;
 
         JavaScriptInterface(Context c) {
             mContext = c;
-            myHandler = new Handler();
         }
 
         @JavascriptInterface
@@ -334,7 +331,16 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
             final int posi;
             try {
                 posi = Integer.parseInt(pos);
-                myHandler.post(new Runnable() {
+//                myHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Intent intent = new Intent(mContext, ImageActivity.class);
+//                        intent.putExtra(ImageActivity.IMAGE_URLS, imageSrcs);
+//                        intent.putExtra(ImageActivity.CURRENT_POS, posi);
+//                        mContext.startActivity(intent);
+//                    }
+//                });
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Intent intent = new Intent(mContext, ImageActivity.class);
@@ -351,7 +357,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
         @JavascriptInterface
         public void loadSohuVideo(final String hoder_id, final String requestUrl) {
             Log.d("videoUrl:" + requestUrl);
-            myHandler.post(new Runnable() {
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Request<String> stringRequest = NoHttp.createStringRequest(requestUrl);
@@ -368,6 +374,13 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                         }
 
                     });
+
+                }
+            });
+
+//            myHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
 //                    NetKit.getAsyncClient().get(requestUrl, new JsonHttpResponseHandler() {
 //                        @Override
 //                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -386,16 +399,15 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
 //                            }
 //                        }
 //                    });
-                }
-            });
+//                }
+//            });
         }
 
         @JavascriptInterface
         public void showMessage(final String message, final String type) {
-            myHandler.post(new Runnable() {
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    Toolkit.showCrouton(mActivity, message, CroutonStyle.getStyle(type));
                     ToastUtil.showToast(getApplicationContext(), message);
                 }
             });

@@ -15,6 +15,21 @@ class NewsDetailPresenter extends NewsDetailContract.Presenter {
     }
 
     @Override
+    void getDetailDataApi(String sid) {
+        mModel.getDetailDataApi(sid, new HttpResultListener<Content>() {
+            @Override
+            public void onSuccess(Content result) {
+                mView.showData(result);
+            }
+
+            @Override
+            public void onFail(String message) {
+                mView.showError(message);
+            }
+        });
+    }
+
+    @Override
     void getDetailData(String sid) {
         mModel.getDetailData(sid, new HttpResultListener<Content>() {
             @Override

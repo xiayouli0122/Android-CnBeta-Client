@@ -17,6 +17,7 @@ public interface NewsDetailContract {
 
     abstract class Model extends BaseNetModel {
         abstract void getDetailData(String sid, HttpResultListener<Content> listener);
+        abstract void getDetailDataApi(String sid, HttpResultListener<Content> listener);
     }
 
     abstract class Presenter extends BaseNetPresenter<View, Model> {
@@ -24,6 +25,7 @@ public interface NewsDetailContract {
             super(view, new NewsDetailModel());
         }
         abstract void getDetailData(String sid);
+        abstract void getDetailDataApi(String sid);
         abstract boolean isFavorited(String sid);
         abstract boolean doFavorite(Content content, String topicLogo);
     }
