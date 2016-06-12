@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view.ui;
+package com.yuri.cnbeta.newsdetial;
 
 import android.app.Activity;
 import android.content.Intent;

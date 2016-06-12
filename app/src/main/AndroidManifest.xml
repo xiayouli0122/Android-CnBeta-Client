@@ -35,10 +35,10 @@
         <activity android:name=".newsdetial.NewsDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />
-        <activity android:name=".view.ui.ImageActivity"
+        <activity android:name=".newsdetial.ImageActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />
-        <activity android:name=".view.ui.NewsCommentActivity"
+        <activity android:name=".newscomment.NewsCommentActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />
 

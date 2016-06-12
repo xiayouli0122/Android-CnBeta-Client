@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view.ui;
+package com.yuri.cnbeta.newscomment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.contract.NewsCommentContract;
 import com.yuri.cnbeta.model.bean.CommentItem;
-import com.yuri.cnbeta.presenter.NewsCommentPresenter;
 import com.yuri.cnbeta.utils.SpannableStringUtils;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.base.BaseListActivity;
@@ -56,7 +54,7 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
     protected void setUpData() {
         super.setUpData();
 
-        mPresenter = new NewsCommentPresenter(getApplicationContext(), this);
+        mPresenter = new NewsCommentPresenter(this);
 
         mSID = getIntent().getStringExtra(EXTRA_SID);
         mCounters = getIntent().getIntExtra(EXTRA_COUNTERS, 0);
@@ -113,13 +111,6 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
             adapter.notifyDataSetChanged();
         }
         recycler.onRefreshCompleted();
-
-        //不需要判断当前评论数量是否比总数小，只需要判断下一次服务器传过来的额数据是否空数据就行
-//        if (mDataList.size() < mCounters) {
-//            recycler.enableLoadMore(true);
-//        } else {
-//            recycler.enableLoadMore(false);
-//        }
     }
 
     @Override
@@ -161,8 +152,6 @@ public class NewsCommentActivity extends BaseListActivity<CommentItem> implement
 
             mTextBuilder = TextDrawable.builder().round();
             mColorGenerator = ColorGenerator.MATERIAL;
-
-//            Log.d("m:" + mMoreView);
             mPopMenu = new ExtendPopMenu(getApplicationContext(), mMoreView);
         }
 
