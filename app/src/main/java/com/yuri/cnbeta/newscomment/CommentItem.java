@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.model.bean;
+package com.yuri.cnbeta.newscomment;
 
 import com.yuri.cnbeta.http.response.Comment;
 

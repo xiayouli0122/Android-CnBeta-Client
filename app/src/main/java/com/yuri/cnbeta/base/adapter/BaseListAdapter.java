@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view.adapter;
+package com.yuri.cnbeta.base.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;

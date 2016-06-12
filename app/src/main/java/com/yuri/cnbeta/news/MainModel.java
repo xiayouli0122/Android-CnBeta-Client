@@ -5,13 +5,11 @@ import android.text.TextUtils;
 import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.rest.Request;
 import com.yolanda.nohttp.rest.Response;
-import com.yuri.cnbeta.http.CallServer;
 import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
 import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.http.response.Article;
-import com.yuri.cnbeta.model.bean.NewsType;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
 import com.yuri.xlog.Log;
 

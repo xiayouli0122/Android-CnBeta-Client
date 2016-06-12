@@ -4,7 +4,7 @@ import com.yuri.cnbeta.base.BaseNetModel;
 import com.yuri.cnbeta.base.BaseNetPresenter;
 import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.model.listener.HttpResultListener;
-import com.yuri.cnbeta.view.BaseView;
+import com.yuri.cnbeta.base.BaseView;
 
 /**
  * Created by Yuri on 2016/4/18.

@@ -10,7 +10,6 @@ import com.yuri.cnbeta.http.HttpListener;
 import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
 import com.yuri.cnbeta.http.response.Comment;
-import com.yuri.cnbeta.model.bean.CommentItem;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
 import com.yuri.xlog.Log;
 

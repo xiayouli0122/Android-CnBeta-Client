@@ -1,7 +1,6 @@
 package com.yuri.cnbeta.news;
 
 import com.yuri.cnbeta.http.response.Article;
-import com.yuri.cnbeta.model.bean.NewsType;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
 
 import java.util.List;

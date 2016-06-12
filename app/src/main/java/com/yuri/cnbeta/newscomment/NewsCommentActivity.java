@@ -11,10 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.model.bean.CommentItem;
 import com.yuri.cnbeta.utils.SpannableStringUtils;
-import com.yuri.cnbeta.view.adapter.BaseViewHolder;
-import com.yuri.cnbeta.view.ui.base.BaseListActivity;
+import com.yuri.cnbeta.base.adapter.BaseViewHolder;
+import com.yuri.cnbeta.base.BaseListActivity;
 import com.yuri.cnbeta.view.widgets.ExtendPopMenu;
 import com.yuri.cnbeta.view.widgets.PullRecycler;
 import com.yuri.cnbeta.view.widgets.textdrawable.TextDrawable;

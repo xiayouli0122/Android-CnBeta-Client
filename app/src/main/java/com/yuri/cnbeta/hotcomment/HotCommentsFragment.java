@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.http.response.HotComment;
 import com.yuri.cnbeta.newsdetial.NewsDetailActivity;
-import com.yuri.cnbeta.view.adapter.BaseViewHolder;
-import com.yuri.cnbeta.view.ui.base.BaseListFragment;
+import com.yuri.cnbeta.base.adapter.BaseViewHolder;
+import com.yuri.cnbeta.base.BaseListFragment;
 import com.yuri.xlog.Log;
 
 import java.util.List;

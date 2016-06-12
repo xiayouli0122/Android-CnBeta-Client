@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.model.bean;
+package com.yuri.cnbeta.view.ui;
 
 import java.util.List;
 

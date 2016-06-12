@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view;
+package com.yuri.cnbeta.base;
 
 /**
  * view 接口类的基类

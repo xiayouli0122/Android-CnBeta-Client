@@ -1,6 +1,5 @@
 package com.yuri.cnbeta.newscomment;
 
-import com.yuri.cnbeta.model.bean.CommentItem;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
 
 import java.util.List;

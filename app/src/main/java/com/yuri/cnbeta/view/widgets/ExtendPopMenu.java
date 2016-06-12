@@ -14,8 +14,8 @@ import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
 import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
-import com.yuri.cnbeta.model.bean.CommentItem;
-import com.yuri.cnbeta.view.adapter.BaseListAdapter;
+import com.yuri.cnbeta.newscomment.CommentItem;
+import com.yuri.cnbeta.base.adapter.BaseListAdapter;
 import com.yuri.xlog.Log;
 
 import java.lang.reflect.Type;

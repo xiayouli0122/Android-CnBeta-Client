@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view.ui;
+package com.yuri.cnbeta.favorite;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,12 +10,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.contract.FavoriteContract;
 import com.yuri.cnbeta.db.model.NewsItem;
 import com.yuri.cnbeta.newsdetial.NewsDetailActivity;
-import com.yuri.cnbeta.presenter.FavoritePresenter;
-import com.yuri.cnbeta.view.adapter.BaseViewHolder;
-import com.yuri.cnbeta.view.ui.base.BaseListFragment;
+import com.yuri.cnbeta.base.adapter.BaseViewHolder;
+import com.yuri.cnbeta.base.BaseListFragment;
 import com.yuri.xlog.Log;
 
 import java.util.List;
@@ -37,7 +35,7 @@ public class FavoriteFragment extends BaseListFragment<NewsItem> implements Favo
         //启动自动刷新
         mRecycler.setRefreshing();
 
-        mPresenter = new FavoritePresenter(getActivity(), this);
+        mPresenter = new FavoritePresenter(this);
     }
 
     @Override
@@ -53,12 +51,16 @@ public class FavoriteFragment extends BaseListFragment<NewsItem> implements Favo
 
     @Override
     public void showData(List<NewsItem> newsItemList) {
-        if (mDataList != null) {
-            mDataList.clear();
+        if (newsItemList == null) {
+            Log.d("empty data");
+        } else {
+            if (mDataList != null) {
+                mDataList.clear();
+            }
+            mDataList = newsItemList;
+            mAdapter.notifyDataSetChanged();
+            mRecycler.onRefreshCompleted();
         }
-        mDataList = newsItemList;
-        mAdapter.notifyDataSetChanged();
-        mRecycler.onRefreshCompleted();
     }
 
     @Override

@@ -11,10 +11,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yuri.cnbeta.R;
 import com.yuri.cnbeta.http.response.Article;
-import com.yuri.cnbeta.model.bean.NewsType;
-import com.yuri.cnbeta.view.adapter.BaseViewHolder;
+import com.yuri.cnbeta.base.adapter.BaseViewHolder;
 import com.yuri.cnbeta.newsdetial.NewsDetailActivity;
-import com.yuri.cnbeta.view.ui.base.BaseListFragment;
+import com.yuri.cnbeta.base.BaseListFragment;
 import com.yuri.cnbeta.view.widgets.PullRecycler;
 import com.yuri.xlog.Log;
 

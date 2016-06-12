@@ -5,7 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-import com.yuri.cnbeta.view.adapter.BaseListAdapter;
+import com.yuri.cnbeta.base.adapter.BaseListAdapter;
 
 
 /**

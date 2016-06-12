@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.model.bean;
+package com.yuri.cnbeta.news;
 
 /**
  * Created by Yuri on 2016/4/18.

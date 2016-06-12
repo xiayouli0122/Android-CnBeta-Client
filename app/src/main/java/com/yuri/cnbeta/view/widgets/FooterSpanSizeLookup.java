@@ -2,7 +2,7 @@ package com.yuri.cnbeta.view.widgets;
 
 import android.support.v7.widget.GridLayoutManager;
 
-import com.yuri.cnbeta.view.adapter.BaseListAdapter;
+import com.yuri.cnbeta.base.adapter.BaseListAdapter;
 
 /**
  * Created by Stay on 6/3/16.

@@ -32,7 +32,7 @@ import com.yuri.cnbeta.http.HttpListener;
 import com.yuri.cnbeta.http.response.Content;
 import com.yuri.cnbeta.utils.ToastUtil;
 import com.yuri.cnbeta.newscomment.NewsCommentActivity;
-import com.yuri.cnbeta.view.ui.base.BaseActivity;
+import com.yuri.cnbeta.base.BaseActivity;
 import com.yuri.cnbeta.view.widgets.AVLoadingIndicatorView.AVLoadingIndicatorView;
 import com.yuri.xlog.Log;
 

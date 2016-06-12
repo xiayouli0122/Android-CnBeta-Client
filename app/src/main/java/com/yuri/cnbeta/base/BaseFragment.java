@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view.ui.base;
+package com.yuri.cnbeta.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

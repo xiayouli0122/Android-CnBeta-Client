@@ -1,12 +1,10 @@
 package com.yuri.cnbeta.base;
 
-import com.yuri.cnbeta.view.BaseView;
-
 /**
  * Created by Yuri on 2016/6/7.
  */
 
-public class BaseNetPresenter<T extends BaseView, E extends BaseNetModel> {
+public class BaseNetPresenter<T, E extends BaseNetModel> {
     protected T mView;
     protected E mModel;
 

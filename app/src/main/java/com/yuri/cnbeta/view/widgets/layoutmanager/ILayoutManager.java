@@ -2,7 +2,7 @@ package com.yuri.cnbeta.view.widgets.layoutmanager;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.yuri.cnbeta.view.adapter.BaseListAdapter;
+import com.yuri.cnbeta.base.adapter.BaseListAdapter;
 
 
 /**

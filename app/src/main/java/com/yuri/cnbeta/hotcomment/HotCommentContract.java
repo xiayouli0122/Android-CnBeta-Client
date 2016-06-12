@@ -4,7 +4,7 @@ import com.yuri.cnbeta.base.BaseNetModel;
 import com.yuri.cnbeta.base.BaseNetPresenter;
 import com.yuri.cnbeta.http.response.HotComment;
 import com.yuri.cnbeta.model.listener.HttpListResultListener;
-import com.yuri.cnbeta.view.BaseView;
+import com.yuri.cnbeta.base.BaseView;
 
 import java.util.List;
 

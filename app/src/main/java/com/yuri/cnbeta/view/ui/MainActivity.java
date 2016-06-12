@@ -14,10 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.yuri.cnbeta.R;
+import com.yuri.cnbeta.favorite.FavoriteFragment;
 import com.yuri.cnbeta.hotcomment.HotCommentsFragment;
 import com.yuri.cnbeta.news.MainFragment;
-import com.yuri.cnbeta.model.bean.NewsType;
-import com.yuri.cnbeta.view.ui.base.BaseFragment;
+import com.yuri.cnbeta.news.NewsType;
+import com.yuri.cnbeta.base.BaseFragment;
 import com.yuri.xlog.Log;
 
 /**
