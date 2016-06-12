@@ -50,6 +50,7 @@ public class HttpConfigure {
     private static final String ARTICLE_URL = BASE_URL + "/articles/%s.htm";
 
     public static final Pattern ARTICLE_PATTERN = Pattern.compile("http://www\\.cnbeta\\.com/articles/(\\d+)\\.htm");
+    public static final Pattern MOBILE_ARTICLE_PATTERN = Pattern.compile("http://m\\.cnbeta\\.com/view/(\\d+)\\.htm");
 
     private static final String VALUE_PAGE_SIZE = "20";
 

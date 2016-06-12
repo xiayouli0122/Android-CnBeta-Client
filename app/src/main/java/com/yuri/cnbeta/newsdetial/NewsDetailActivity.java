@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -21,6 +20,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.rest.Request;
 import com.yolanda.nohttp.rest.Response;
@@ -36,6 +37,7 @@ import com.yuri.cnbeta.view.ui.base.BaseActivity;
 import com.yuri.cnbeta.view.widgets.AVLoadingIndicatorView.AVLoadingIndicatorView;
 import com.yuri.xlog.Log;
 
+import java.lang.reflect.Type;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
@@ -95,8 +97,6 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = NewsCommentActivity.getIntent(NewsDetailActivity.this,
-//                        mContent.sid, Integer.parseInt(mContent.comments));
                 //由于使用了ywwxhz获取咨询详情的方法，所以这里得不到评论的总数量了（详见NewsDetailImpl）
                 //所以这里就默认传个0过去吧，NewsCommentActivity暂时也舍弃对评论总数量的处理
                 Intent intent = NewsCommentActivity.getIntent(NewsDetailActivity.this,
@@ -138,7 +138,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
         mLoadingView.start();
 
         if (mPresenter.isFavorited(mSID)) {
-            toolbar.getMenu().findItem(R.id.action_favorite).setTitle("已收藏");
+            mToolbar.getMenu().findItem(R.id.action_favorite).setTitle("已收藏");
         }
 
         mPresenter.getDetailData(mSID);
@@ -203,7 +203,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 } else {
                     //bug:在页面还没出来的时候，收藏功能应该是不可用的
                     if (mPresenter.doFavorite(mContent, mTopicLogoUrl)) {
-                        toolbar.getMenu().findItem(R.id.action_favorite).setTitle("已收藏");
+                        mToolbar.getMenu().findItem(R.id.action_favorite).setTitle("已收藏");
                         ToastUtil.showToast(getApplicationContext(), "收藏成功");
                     } else {
                         ToastUtil.showToast(getApplicationContext(), "已收藏");
@@ -266,7 +266,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             try {
                 Intent intent;
-                Matcher sidMatcher = HttpConfigure.ARTICLE_PATTERN.matcher(url);
+                Matcher sidMatcher = HttpConfigure.MOBILE_ARTICLE_PATTERN.matcher(url);
                 if (sidMatcher.find()) {
                     intent = NewsDetailActivity.getIntent(NewsDetailActivity.this, mContent.sid, "");
                     startActivity(intent);
@@ -298,6 +298,11 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
             if (!TextUtils.isEmpty(prefix)) {
                 String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(prefix);
                 if (mimeType != null && mimeType.startsWith("image")) {
+                    boolean showImage = true;
+                    if (finish || showImage) {
+                        //这里试着使用Glide的缓存图片去加载
+
+                    }
                 }
             }
             return super.shouldInterceptRequest(view, url);
@@ -331,15 +336,6 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
             final int posi;
             try {
                 posi = Integer.parseInt(pos);
-//                myHandler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Intent intent = new Intent(mContext, ImageActivity.class);
-//                        intent.putExtra(ImageActivity.IMAGE_URLS, imageSrcs);
-//                        intent.putExtra(ImageActivity.CURRENT_POS, posi);
-//                        mContext.startActivity(intent);
-//                    }
-//                });
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -362,45 +358,34 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 public void run() {
                     Request<String> stringRequest = NoHttp.createStringRequest(requestUrl);
                     CallServer.getInstance().add(0, stringRequest, new HttpListener<String>(){
-
                         @Override
                         public void onSuccess(int what, Response<String> response) {
-                            Log.d("" + response.get());
+                            Log.json(response.get());
+                            Type type = new TypeToken<VideoInfoResponse>(){}.getType();
+                            VideoInfoResponse videoInfoResponse = new Gson().fromJson(response.get(), type);
+                            if (videoInfoResponse.status == 200) {
+                                Log.object(videoInfoResponse.data);
+                                try {
+                                    mWebview.loadUrl("javascript:VideoTool.VideoCallBack(" +
+                                            "\"" + hoder_id + "\",\"" + videoInfoResponse.data.url_high_mp4 +
+                                            "\",\"" + videoInfoResponse.data.hor_big_pic + "\")");
+                                } catch (Exception e) {
+                                    Log.d("@@video load fail:" + e.getMessage());
+                                }
+                            } else {
+                                Log.e("##video load fail:" + videoInfoResponse.statusText);
+                            }
                         }
 
                         @Override
                         public void onFailed(int what, String errorMsg) {
-
+                            Log.d("video load fail:" + errorMsg);
                         }
 
                     });
 
                 }
             });
-
-//            myHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    NetKit.getAsyncClient().get(requestUrl, new JsonHttpResponseHandler() {
-//                        @Override
-//                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-//                            try {
-//                                mWebView.loadUrl("javascript:VideoTool.VideoCallBack(\"" + hoder_id + "\",\"" + response.getJSONObject("data").getString("url_high_mp4") + "\",\"" + response.getJSONObject("data").getString("hor_big_pic") + "\")");
-//                            } catch (Exception e) {
-//                                Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                            Toolkit.showCrouton(mActivity, "搜狐视频加载失败", Style.ALERT);
-//                            if (MyApplication.getInstance().getDebug()) {
-//                                Toast.makeText(getActivity(), throwable.toString(), Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//                }
-//            });
         }
 
         @JavascriptInterface

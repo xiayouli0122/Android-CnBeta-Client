@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.yuri.cnbeta.R;
 
 public abstract class BaseActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener {
-    protected Toolbar toolbar;
-    protected TextView toolbar_title;
+    protected Toolbar mToolbar;
+    protected TextView mToolBarTitleView;
     public static final int MODE_BACK = 0;
     public static final int MODE_DRAWER = 1;
     public static final int MODE_NONE = 2;
@@ -58,14 +58,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Toolbar.
 
     protected void setUpToolbar(String title, int menuId, int mode) {
         if (mode != MODE_NONE) {
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            toolbar.setTitle(title);
-//            toolbar_title = (textview) findviewbyid(r.id.toolbar_title);
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            mToolbar.setTitle(title);
 
             if (mode == MODE_BACK) {
-//                toolbar.setnavigationicon(r.drawable.ic_toolbar_back);
+//                mToolbar.setnavigationicon(r.drawable.ic_toolbar_back);
             }
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onNavigationBtnClicked();
@@ -78,14 +77,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Toolbar.
 
     protected void setUpToolbar(int titleResId, int menuId, int mode) {
         if (mode != MODE_NONE) {
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            toolbar.setTitle("");
-//            toolbar_title = (textview) findviewbyid(r.id.toolbar_title);
+            mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            mToolbar.setTitle("");
 
             if (mode == MODE_BACK) {
-//                toolbar.setnavigationicon(r.drawable.ic_toolbar_back);
+//                mToolbar.setnavigationicon(r.drawable.ic_toolbar_back);
             }
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onNavigationBtnClicked();
@@ -98,23 +96,23 @@ public abstract class BaseActivity extends AppCompatActivity implements Toolbar.
     }
 
     protected void setUpMenu(int menuId) {
-        if (toolbar != null) {
-            toolbar.getMenu().clear();
+        if (mToolbar != null) {
+            mToolbar.getMenu().clear();
             if (menuId > 0) {
-                toolbar.inflateMenu(menuId);
-                toolbar.setOnMenuItemClickListener(this);
+                mToolbar.inflateMenu(menuId);
+                mToolbar.setOnMenuItemClickListener(this);
             }
         }
     }
 
     protected void setUpTitle(int titleResId) {
-        if (titleResId > 0 && toolbar_title != null) {
-            toolbar_title.setText(titleResId);
+        if (titleResId > 0 && mToolBarTitleView != null) {
+            mToolBarTitleView.setText(titleResId);
         }
     }
 
     protected void setUpTitle(String title) {
-        toolbar.setTitle(title);
+        mToolbar.setTitle(title);
     }
 
     protected void onNavigationBtnClicked() {
