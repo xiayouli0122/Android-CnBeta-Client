@@ -1,4 +1,4 @@
-package com.yuri.cnbeta.view.ui;
+package com.yuri.cnbeta.hotcomment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.yuri.cnbeta.R;
-import com.yuri.cnbeta.contract.HotCommentContract;
 import com.yuri.cnbeta.http.response.HotComment;
 import com.yuri.cnbeta.newsdetial.NewsDetailActivity;
-import com.yuri.cnbeta.presenter.HotCommentPresenter;
 import com.yuri.cnbeta.view.adapter.BaseViewHolder;
 import com.yuri.cnbeta.view.ui.base.BaseListFragment;
 import com.yuri.xlog.Log;
@@ -22,6 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
+ * 热门评论界面
  * Created by Yuri on 2016/4/14.
  */
 public class HotCommentsFragment extends BaseListFragment<HotComment> implements HotCommentContract.View {
@@ -34,7 +33,7 @@ public class HotCommentsFragment extends BaseListFragment<HotComment> implements
         //启动自动刷新
         mRecycler.setRefreshing();
 
-        mPresenter = new HotCommentPresenter(getActivity(), this);
+        mPresenter = new HotCommentPresenter(this);
     }
 
     @Override

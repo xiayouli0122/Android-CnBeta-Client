@@ -6,5 +6,4 @@ package com.yuri.cnbeta.http.response;
 public class ApiResponse<T> {
     public String status;
     public T result;
-
 }
