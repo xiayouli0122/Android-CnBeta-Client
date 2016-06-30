@@ -69,9 +69,9 @@ public class NewsDetailModel extends NewsDetailContract.Model {
     @Override
     public void getDetailData(final String sid, final HttpResultListener listener) {
         //PC端网页地址
-//        String url = HttpConfigure.buildArtileUrl(sid);
+        String url = HttpConfigure.buildArtileUrl(sid);
         //移动版网页地址
-        String url = HttpConfigure.buildMobileViewUrl(sid);
+//        String url = HttpConfigure.buildMobileViewUrl(sid);
         Log.d("contentUrl:" + url);
         RequestMethod requestMethod = RequestMethod.GET;
         Request<String> request = NoHttp.createStringRequest(url, requestMethod);
@@ -81,8 +81,8 @@ public class NewsDetailModel extends NewsDetailContract.Model {
             public void onSuccess(int what, Response<String> response) {
                 Content content = new Content();
                 content.sid = sid;
-//                parseHtml(response.get(), content);
-                parseMobileHtml(response.get(), content);
+                parseHtml(response.get(), content);
+//                parseMobileHtml(response.get(), content);
                 if (listener != null) {
                     listener.onSuccess(content);
                 }
@@ -175,8 +175,9 @@ public class NewsDetailModel extends NewsDetailContract.Model {
         Matcher snMatcher = SN_PATTERN.matcher(htm);
         if (snMatcher.find()) {
             String sn = snMatcher.group(1);
+            item.sn = sn;
         }
-//            item.setSN(snMatcher.group(1));
+        Log.object(item);
 //        Log.d(item.toString());
 //        if(item.getContent()!=null&&item.getContent().length()>0){
 //            if(shouldCache) {

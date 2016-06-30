@@ -36,7 +36,7 @@ public class HttpResponseListener<T> implements OnResponseListener<T> {
 
     @Override
     public void onSucceed(int what, Response<T> response) {
-        Log.d("what:" + what);
+        Log.d("what:" + what + ",result:" + response.get());
         if (mCallBack != null) {
             mCallBack.onSuccess(what, response);
         }

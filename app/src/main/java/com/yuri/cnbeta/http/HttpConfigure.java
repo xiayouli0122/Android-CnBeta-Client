@@ -46,8 +46,10 @@ public class HttpConfigure {
     private static final String KEY_TID = "tid";
     private static final String KEY_PID = "pid";
 
+    public static final String SECOND_VIEW = BASE_URL + "/captcha.htm";
     private static final String MOBILE_VIEW_URL = "http://m.cnbeta.com/view/%s.htm";
     private static final String ARTICLE_URL = BASE_URL + "/articles/%s.htm";
+    public static final String COMMENT_URL = BASE_URL + "/cmt";
 
     public static final Pattern ARTICLE_PATTERN = Pattern.compile("http://www\\.cnbeta\\.com/articles/(\\d+)\\.htm");
     public static final Pattern MOBILE_ARTICLE_PATTERN = Pattern.compile("http://m\\.cnbeta\\.com/view/(\\d+)\\.htm");
@@ -130,17 +132,19 @@ public class HttpConfigure {
         return buildUrl(paramMap);
     }
 
-    public static String writeComment(String sid, String pid) {
+    public static String writeComment(String sid, String pid, String seccode, String content) {
         Map<String, String> paramMap = initParamMap();
         paramMap.put(KEY_METHOD, DO_COMMENT);
+        paramMap.put(KEY_OP, "publish");
         paramMap.put(KEY_SID, sid);
-        paramMap.put("content", "oooooooo");
         /**
          * null pid means publish a comment,NOT null means reply a comment
          */
         if (pid != null) {
             paramMap.put(KEY_PID, pid);
         }
+        paramMap.put("seccode", seccode);
+        paramMap.put("content", content);
         return buildUrl(paramMap);
     }
 

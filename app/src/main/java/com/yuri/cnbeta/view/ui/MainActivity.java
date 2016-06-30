@@ -19,6 +19,7 @@ import com.yuri.cnbeta.hotcomment.HotCommentsFragment;
 import com.yuri.cnbeta.news.MainFragment;
 import com.yuri.cnbeta.news.NewsType;
 import com.yuri.cnbeta.base.BaseFragment;
+import com.yuri.cnbeta.utils.ToastUtil;
 import com.yuri.xlog.Log;
 
 /**
@@ -76,12 +77,19 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    private long mLastClickTime = 0;
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            long now = System.currentTimeMillis();
+            if (now - mLastClickTime > 2000) {
+                ToastUtil.showToast(getApplicationContext(), "再按一次返回键退出");
+                mLastClickTime = now;
+            } else {
+                this.finish();
+            }
         }
     }
 
@@ -176,4 +184,5 @@ public class MainActivity extends AppCompatActivity
         }
         mCurrentFragment = showFragment;
     }
+
 }

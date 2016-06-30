@@ -5,5 +5,11 @@ package com.yuri.cnbeta.http.response;
  */
 public class ApiResponse<T> {
     public String status;
+    public String message;
     public T result;
+
+    public static class ErrorResult {
+        public String error_code;
+        public String error_msg;
+    }
 }

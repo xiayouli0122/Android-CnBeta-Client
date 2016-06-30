@@ -14,8 +14,8 @@ import com.yuri.cnbeta.http.HttpConfigure;
 import com.yuri.cnbeta.http.HttpListener;
 import com.yuri.cnbeta.http.request.JsonRequest;
 import com.yuri.cnbeta.http.response.ApiResponse;
-import com.yuri.cnbeta.newscomment.CommentItem;
 import com.yuri.cnbeta.base.adapter.BaseListAdapter;
+import com.yuri.cnbeta.http.response.HttpCommentItem;
 import com.yuri.xlog.Log;
 
 import java.lang.reflect.Type;
@@ -25,7 +25,7 @@ public class ExtendPopMenu extends PopupMenu {
     public int AGAINST = 2;
     public int REPORT = 3;
     private int action;
-    private CommentItem commentItem;
+    private HttpCommentItem commentItem;
     private Context mContext;
     private BaseListAdapter adapter;
     private String token;
@@ -33,7 +33,7 @@ public class ExtendPopMenu extends PopupMenu {
     public ExtendPopMenu(Context context, View anchor) {
         super(context, anchor);
         this.mContext = context;
-        inflate(R.menu.menu_comment);
+        inflate(R.menu.menu_comment_item);
         setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -42,7 +42,7 @@ public class ExtendPopMenu extends PopupMenu {
                         Log.d("support");
                         action = SUPPORT;
                         Type type = new TypeToken<ApiResponse<String>>() {}.getType();
-                        String supportUrl = HttpConfigure.voteComment("support", commentItem.sid, commentItem.tid);
+                        String supportUrl = HttpConfigure.voteComment("support", commentItem.tid, commentItem.pid);
                         //against
                         final Request<ApiResponse> request = new JsonRequest(supportUrl, type);
                         CallServer.getInstance().add(0, request, new HttpListener<ApiResponse>() {
@@ -56,13 +56,12 @@ public class ExtendPopMenu extends PopupMenu {
                             public void onFailed(int what, String errorMsg) {
                             }
                         });
-//                        NetKit.getInstance().setCommentAction("support", commentItem.getSid()+"", commentItem.getTid(), token, chandler);
                         break;
                     case R.id.comment_against:
                         Log.d("against");
                         action = AGAINST;
                         Type type1 = new TypeToken<ApiResponse<String>>() {}.getType();
-                        String againstUrl = HttpConfigure.voteComment("against", commentItem.sid, commentItem.tid);
+                        String againstUrl = HttpConfigure.voteComment("against", commentItem.tid, commentItem.pid);
                         //against
                         final Request<ApiResponse> request1 = new JsonRequest(againstUrl, type1);
                         CallServer.getInstance().add(0, request1, new HttpListener<ApiResponse>() {
@@ -82,7 +81,7 @@ public class ExtendPopMenu extends PopupMenu {
                         Log.d("report");
                         //举报
                         Type type2 = new TypeToken<ApiResponse<String>>() {}.getType();
-                        String reporttUrl = HttpConfigure.voteComment("report", commentItem.sid, commentItem.tid);
+                        String reporttUrl = HttpConfigure.voteComment("report", commentItem.tid, commentItem.pid);
                         //against
                         final Request<ApiResponse> request2 = new JsonRequest(reporttUrl, type2);
                         CallServer.getInstance().add(0, request2, new HttpListener<ApiResponse>() {
@@ -124,7 +123,7 @@ public class ExtendPopMenu extends PopupMenu {
 
     }
 
-    public void setCommentItem(CommentItem commentItem) {
+    public void setCommentItem(HttpCommentItem commentItem) {
         this.commentItem = commentItem;
     }
 

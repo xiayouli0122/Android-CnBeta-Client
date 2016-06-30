@@ -44,7 +44,7 @@
             android:layout_alignEnd="@+id/comment_name"
             android:layout_marginBottom="2dp"
             android:layout_alignLeft="@+id/comment_name"
-            android:visibility="gone"
+            android:visibility="visible"
             />
 
         <ImageView

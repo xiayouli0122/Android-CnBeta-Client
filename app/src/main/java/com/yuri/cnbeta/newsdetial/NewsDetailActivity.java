@@ -99,7 +99,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailContra
                 //由于使用了ywwxhz获取咨询详情的方法，所以这里得不到评论的总数量了（详见NewsDetailImpl）
                 //所以这里就默认传个0过去吧，NewsCommentActivity暂时也舍弃对评论总数量的处理
                 Intent intent = NewsCommentActivity.getIntent(NewsDetailActivity.this,
-                        mContent.sid, 0);
+                        mContent.sid, mContent.sn);
                 startActivity(intent);
             }
         });

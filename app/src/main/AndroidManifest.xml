@@ -41,6 +41,8 @@
         <activity android:name=".newscomment.NewsCommentActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />
+        <activity android:name=".newscomment.AddCommentActivity"
+                  android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 

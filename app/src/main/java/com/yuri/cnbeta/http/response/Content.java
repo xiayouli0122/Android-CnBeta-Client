@@ -18,6 +18,7 @@ public class Content implements Comparable<Content>,Serializable {
     public String counter;
     public String inputtime;
     public String time;//已格式化过的日期
+    public String sn;
 
     @Override
     public int compareTo(Content another) {
