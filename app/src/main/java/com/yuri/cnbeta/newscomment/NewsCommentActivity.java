@@ -202,12 +202,13 @@ public class NewsCommentActivity extends BaseListActivity<HttpCommentItem> imple
 
             mImageView.setImageDrawable(mTextBuilder.build(String.valueOf(userName.charAt(0)),
                     mColorGenerator.getColor(commentItem.tid)));
-            String address;
+            String address = "";
             if (TextUtils.isEmpty(commentItem.host_name)) {
                 address = "火星网友";
             } else {
                 address = commentItem.host_name;
             }
+            Log.d("address:" + address);
             mAddressView.setText(address);
             if (TextUtils.isEmpty(commentItem.refContent)) {
                 mParentContent.setVisibility(View.GONE);

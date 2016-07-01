@@ -1,15 +1,16 @@
 package com.yuri.cnbeta.http.response;
 
+import com.yuri.xlog.Log;
+
 /**
  * Created by Yuri on 2016/6/12.
  */
 public class HttpCommentItem {
-    public int score;
+    public String score;
     public String tid;
     public String pid;
-    public String parent;//parent id
-    public int sid;
-    public int reason;
+    public String sid;
+    public String reason;
     public String icon;
     public String date;
     public String name;
@@ -17,7 +18,10 @@ public class HttpCommentItem {
     public String host_name;
     public String refContent;
 
-    public void copy(HttpCommentItem commentItem) {
+    public void copy(CommentResponse.CommentDetailItem commentItem) {
+        this.tid = commentItem.tid;
+        this.pid = commentItem.pid;
+        this.sid = commentItem.sid;
         this.score = commentItem.score;
         this.reason = commentItem.reason;
         this.icon = commentItem.icon;

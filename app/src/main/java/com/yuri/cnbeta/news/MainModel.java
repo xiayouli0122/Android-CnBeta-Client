@@ -25,7 +25,7 @@ public class MainModel extends MainContract.Model {
     public void getNews(NewsType newsType, String param, String lastSid, final HttpListResultListener listener) {
         Type type = new TypeToken<ApiResponse<List<Article>>>(){}.getType();
         String url;
-        Log.d("newsType:" + newsType);
+        Log.d("newsType:" + newsType + ",param:" + param + "lastSid:" + lastSid);
         if (newsType == NewsType.LATEST) {
             if (TextUtils.isEmpty(lastSid)) {
                 url = HttpConfigure.getLatestNews();

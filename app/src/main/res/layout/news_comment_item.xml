@@ -31,6 +31,7 @@
             android:layout_toRightOf="@+id/comment_image"
             android:layout_marginRight="2dp"
             android:text="匿名用户"
+            android:textColor="@color/textPrimaryDark"
             />
 
         <TextView
@@ -44,7 +45,7 @@
             android:layout_toLeftOf="@+id/comment_more"
             android:layout_toRightOf="@+id/comment_image"
             android:layout_marginBottom="2dp"
-            android:visibility="visible"
+            android:textColor="@color/textSecondaryDark"
             />
 
         <ImageView

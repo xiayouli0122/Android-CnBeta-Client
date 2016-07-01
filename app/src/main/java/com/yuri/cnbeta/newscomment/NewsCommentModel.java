@@ -76,7 +76,7 @@ public class NewsCommentModel extends NewsCommentContract.Model {
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
-
+//
 //                try {
 //                    FileWriter writer = new FileWriter(file);
 //                    writer.write(response.get());
@@ -99,33 +99,49 @@ public class NewsCommentModel extends NewsCommentContract.Model {
                     }
 
                     //所有评论列表
-                    List<HttpCommentItem> cmntlist = result.result.cmntlist;
-                    HashMap<String, HttpCommentItem> cmntstore = result.result.cmntstore;
-                    HttpCommentItem commentItem;
-                    for (int i = 0; i < cmntlist.size(); i++) {
-                        commentItem = cmntlist.get(i);
-                        StringBuilder sb = new StringBuilder();
-                        commentItem.copy(cmntstore.get(commentItem.tid));
+                    List<CommentResponse.CommentSimpleItem> cmntlist = result.result.cmntlist;
+                    HashMap<String, CommentResponse.CommentDetailItem> cmntstore = result.result.cmntstore;
 
-                        HttpCommentItem parent;
-                        String parentId = commentItem.parent;
-                        Log.d("parentId:" + parentId);
+                    List<HttpCommentItem> commentItemList = new ArrayList<>();
+
+                    HttpCommentItem commentItem;
+
+                    CommentResponse.CommentSimpleItem currentSimpleItem;
+                    CommentResponse.CommentDetailItem currentDetailItem;
+
+                    for (int i = 0; i < cmntlist.size(); i++) {
+                        //首先拿到第一个简约列表
+                        currentSimpleItem = cmntlist.get(i);
+                        //再拿到他的详细列表
+                        currentDetailItem = cmntstore.get(currentSimpleItem.tid);
+                        commentItem = new HttpCommentItem();
+                        commentItem.copy(currentDetailItem);
+
+                        //确认他的引用回复
+                        //根据parent判断
+                        String parentId = currentSimpleItem.parent;
                         int index;
+                        String refContent = "";
                         while (!TextUtils.isEmpty(parentId)) {
-                            parent = cmntstore.get(commentItem.parent);
-                            index = getIndex(parent.tid, cmntlist);
-                            sb.append("//@");
-                            sb.append(parent.name);
-                            sb.append(": [");
-                            sb.append(parent.host_name);
-                            sb.append("]" + index + "楼" + "\n");
-                            sb.append(parent.comment);
-                            parentId = parent.parent;
-                            if (!TextUtils.isEmpty(parentId)) {
-                                sb.append("\n");
+                            //得到parent的simpleitem
+                            currentSimpleItem = getParent(parentId, cmntlist);
+                            currentDetailItem = cmntstore.get(currentSimpleItem.tid);
+                            index = getIndex(currentSimpleItem.tid, cmntlist);
+                            StringBuilder parentSb = new StringBuilder();
+                            parentSb.append("//@");
+                            parentSb.append(currentDetailItem.name);
+                            parentSb.append(": [");
+                            parentSb.append(currentDetailItem.host_name);
+                            parentSb.append("]" + index + "楼" + "\n");
+                            parentSb.append(currentDetailItem.comment);
+                            parentId = currentSimpleItem.parent;
+                            if (!refContent.equals("")) {
+                                parentSb.append("\n");
                             }
+                            refContent = parentSb + refContent;
                         }
-                        commentItem.refContent = sb.toString();
+                        commentItem.refContent = refContent;
+                        commentItemList.add(commentItem);
                     }
 
                     //热门评论
@@ -151,7 +167,7 @@ public class NewsCommentModel extends NewsCommentContract.Model {
 //                        item.refContent = sb.toString();
 //                    }
 
-                    listener.onSuccess(cmntlist);
+                    listener.onSuccess(commentItemList);
                 } else {
                     listener.onFail("");
                 }
@@ -240,13 +256,24 @@ public class NewsCommentModel extends NewsCommentContract.Model {
 //        });
     }
 
-    public int getIndex(String tid, List<HttpCommentItem> cmnList) {
+    public int getIndex(String tid, List<CommentResponse.CommentSimpleItem> cmnList) {
         for (int i = 0; i < cmnList.size(); i++) {
             if (cmnList.get(i).tid.equals(tid)) {
                 return i;
             }
         }
         return 0;
+    }
+
+    public CommentResponse.CommentSimpleItem getParent(String pid, List<CommentResponse.CommentSimpleItem> cmnList) {
+        CommentResponse.CommentSimpleItem commentItem;
+        for (int i = 0; i < cmnList.size(); i++) {
+            commentItem = cmnList.get(i);
+            if (commentItem.tid.equals(pid)) {
+                return commentItem;
+            }
+        }
+        return null;
     }
 
     @Override
