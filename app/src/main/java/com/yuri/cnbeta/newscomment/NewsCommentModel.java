@@ -259,7 +259,7 @@ public class NewsCommentModel extends NewsCommentContract.Model {
     public int getIndex(String tid, List<CommentResponse.CommentSimpleItem> cmnList) {
         for (int i = 0; i < cmnList.size(); i++) {
             if (cmnList.get(i).tid.equals(tid)) {
-                return i;
+                return cmnList.size() - i;
             }
         }
         return 0;
