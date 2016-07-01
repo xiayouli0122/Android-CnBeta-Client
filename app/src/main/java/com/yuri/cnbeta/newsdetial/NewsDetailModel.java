@@ -177,7 +177,7 @@ public class NewsDetailModel extends NewsDetailContract.Model {
             String sn = snMatcher.group(1);
             item.sn = sn;
         }
-        Log.object(item);
+//        Log.object(item);
 //        Log.d(item.toString());
 //        if(item.getContent()!=null&&item.getContent().length()>0){
 //            if(shouldCache) {

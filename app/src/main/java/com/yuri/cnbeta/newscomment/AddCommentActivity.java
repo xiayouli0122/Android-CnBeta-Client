@@ -118,6 +118,11 @@ public class AddCommentActivity extends BaseActivity implements NewsCommentContr
     }
 
     @Override
+    public void onCommentClose() {
+
+    }
+
+    @Override
     public void showData(List<HttpCommentItem> commentItemList) {
 
     }

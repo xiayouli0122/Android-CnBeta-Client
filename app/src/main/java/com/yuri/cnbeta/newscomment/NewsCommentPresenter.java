@@ -28,7 +28,11 @@ public class NewsCommentPresenter extends NewsCommentContract.Presenter {
 
             @Override
             public void onFail(String message) {
-                mView.showError(message);
+                if (message.equals("评论已关闭")) {
+                    mView.onCommentClose();
+                } else {
+                    mView.showError(message);
+                }
             }
         });
     }

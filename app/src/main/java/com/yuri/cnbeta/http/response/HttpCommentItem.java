@@ -7,6 +7,7 @@ public class HttpCommentItem {
     public int score;
     public String tid;
     public String pid;
+    public String parent;//parent id
     public int sid;
     public int reason;
     public String icon;

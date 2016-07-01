@@ -1,8 +1,10 @@
 package com.yuri.cnbeta.view.ui;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity
                 mCurrentFragment.goTop();
             }
         });
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
     }
 
     private long mLastClickTime = 0;

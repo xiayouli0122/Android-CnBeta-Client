@@ -18,6 +18,7 @@ import java.util.List;
 public interface NewsCommentContract {
 
     interface View extends BaseView {
+        void onCommentClose();
         void showData(List<HttpCommentItem> commentItemList);
         void onGetCodeImage(Bitmap bitmap);
     }

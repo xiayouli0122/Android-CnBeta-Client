@@ -2,6 +2,7 @@ package com.yuri.cnbeta.newscomment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,6 +25,12 @@ import com.yuri.xlog.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,64 +65,95 @@ public class NewsCommentModel extends NewsCommentContract.Model {
             @Override
             public void onSuccess(int what, Response<String> response) {
                 String json = response.get();
-                Type type = new TypeToken<CommentResponse>(){}.getType();
+                Type type = new TypeToken<CommentResponse>() {}.getType();
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.create();
                 CommentResponse result = gson.fromJson(json, type);
+
+//                File file = new File("/sdcard/test.txt");
+//                try {
+//                    file.createNewFile();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
+//                try {
+//                    FileWriter writer = new FileWriter(file);
+//                    writer.write(response.get());
+//                    writer.flush();
+//                    writer.close();
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
                 Log.d("result:" + result.state);
                 if (result.state.equals("success")) {
-                    Log.object(result.result);
+//                    Log.object(result.result);
 
+                    if (result.result.open == 0) {
+                        //评论已关闭
+                        listener.onFail("评论已关闭");
+                        return;
+                    }
+
+                    //所有评论列表
                     List<HttpCommentItem> cmntlist = result.result.cmntlist;
                     HashMap<String, HttpCommentItem> cmntstore = result.result.cmntstore;
                     HttpCommentItem commentItem;
-                    for (int i = cmntlist.size() - 1; i >=0 ; i--) {
+                    for (int i = 0; i < cmntlist.size(); i++) {
                         commentItem = cmntlist.get(i);
                         StringBuilder sb = new StringBuilder();
                         commentItem.copy(cmntstore.get(commentItem.tid));
-                        HttpCommentItem parent = cmntstore.get(commentItem.pid);
-                        int index = cmntlist.indexOf(parent) + 1;
-                        while (parent != null) {
+
+                        HttpCommentItem parent;
+                        String parentId = commentItem.parent;
+                        Log.d("parentId:" + parentId);
+                        int index;
+                        while (!TextUtils.isEmpty(parentId)) {
+                            parent = cmntstore.get(commentItem.parent);
+                            index = getIndex(parent.tid, cmntlist);
                             sb.append("//@");
                             sb.append(parent.name);
                             sb.append(": [");
                             sb.append(parent.host_name);
-                            sb.append("]" + index + "楼" +
-                                    "\n");
+                            sb.append("]" + index + "楼" + "\n");
                             sb.append(parent.comment);
-                            parent = cmntstore.get(parent.pid);
-                            if (parent != null) {
+                            parentId = parent.parent;
+                            if (!TextUtils.isEmpty(parentId)) {
                                 sb.append("\n");
                             }
                         }
                         commentItem.refContent = sb.toString();
                     }
 
-                    List<HttpCommentItem> hotcmntlist = result.result.hotlist;
-                    for (HttpCommentItem item : hotcmntlist) {
-                        StringBuilder sb = new StringBuilder();
-                        item.copy(cmntstore.get(item.tid));
-                        HttpCommentItem parent = cmntstore.get(item.pid);
-                        int index = cmntlist.indexOf(parent) + 1;
-                        while (parent != null) {
-                            sb.append("//@");
-                            sb.append(parent.name);
-                            sb.append(": [");
-                            sb.append(parent.host_name);
-                            sb.append("] " + index + "楼" +
-                                    "\n");
-                            sb.append(parent.comment);
-                            parent = cmntstore.get(parent.pid);
-                            if (parent != null) {
-                                sb.append("\n");
-                            }
-                        }
-                        item.refContent = sb.toString();
-                    }
+                    //热门评论
+//                    List<HttpCommentItem> hotcmntlist = result.result.hotlist;
+//                    for (HttpCommentItem item : hotcmntlist) {
+//                        StringBuilder sb = new StringBuilder();
+//                        item.copy(cmntstore.get(item.tid));
+//                        HttpCommentItem parent = cmntstore.get(item.pid);
+//                        int index = cmntlist.indexOf(parent) + 1;
+//                        while (parent != null) {
+//                            sb.append("//@");
+//                            sb.append(parent.name);
+//                            sb.append(": [");
+//                            sb.append(parent.host_name);
+//                            sb.append("] " + index + "楼" +
+//                                    "\n");
+//                            sb.append(parent.comment);
+//                            parent = cmntstore.get(parent.pid);
+//                            if (parent != null) {
+//                                sb.append("\n");
+//                            }
+//                        }
+//                        item.refContent = sb.toString();
+//                    }
 
                     listener.onSuccess(cmntlist);
                 } else {
-
+                    listener.onFail("");
                 }
             }
 
@@ -202,6 +240,15 @@ public class NewsCommentModel extends NewsCommentContract.Model {
 //        });
     }
 
+    public int getIndex(String tid, List<HttpCommentItem> cmnList) {
+        for (int i = 0; i < cmnList.size(); i++) {
+            if (cmnList.get(i).tid.equals(tid)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     @Override
     void getCodeImage(final HttpResultListener<Bitmap> listener) {
         final String url = HttpConfigure.SECOND_VIEW;
@@ -260,16 +307,16 @@ public class NewsCommentModel extends NewsCommentContract.Model {
     void writeComment(String sid, String pid, String seccode, String content, final HttpSimpleResultListener listener) {
 
 
-
         final String url = HttpConfigure.writeComment(sid, pid, seccode, content);
-        Type type = new TypeToken<ApiResponse>(){}.getType();
+        Type type = new TypeToken<ApiResponse>() {
+        }.getType();
         Request<ApiResponse> jsonRequest = new JsonRequest(url, type);
         addRequest(url, jsonRequest);
 
         request(jsonRequest, new HttpListener<ApiResponse>() {
             @Override
             public void onSuccess(int what, Response<ApiResponse> response) {
-                ApiResponse apiResponse  = response.get();
+                ApiResponse apiResponse = response.get();
                 if (apiResponse.status.equals("error")) {
                     ApiResponse.ErrorResult result = (ApiResponse.ErrorResult) apiResponse.result;
                     listener.onFail(result.error_msg);

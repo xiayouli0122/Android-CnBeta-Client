@@ -64,9 +64,10 @@ public class NewsCommentActivity extends BaseListActivity<HttpCommentItem> imple
         Log.d("sID：" + mSID);
 
         setUpTitle("评论");
-        setUpMenu(R.menu.menu_comment);
+        //暂时不做发表评论
+//        setUpMenu(R.menu.menu_comment);
         recycler.setRefreshing();
-        recycler.enableLoadMore(true);
+        recycler.enableLoadMore(false);
     }
 
     @Override
@@ -120,6 +121,13 @@ public class NewsCommentActivity extends BaseListActivity<HttpCommentItem> imple
     @Override
     public void onGetCodeImage(Bitmap bitmap) {
 
+    }
+
+    @Override
+    public void onCommentClose() {
+        mEmptyViewTV.setText("评论已关闭");
+        mEmptyViewTV.setVisibility(View.VISIBLE);
+        recycler.onRefreshCompleted();
     }
 
     @Override
@@ -189,7 +197,7 @@ public class NewsCommentActivity extends BaseListActivity<HttpCommentItem> imple
                 userName = commentItem.name;
             }
 
-            userName = userName + " (" + (position + 1) + "楼)";
+            userName = userName + " (" + (mDataList.size() - position) + "楼)";
             mNameView.setText(userName);
 
             mImageView.setImageDrawable(mTextBuilder.build(String.valueOf(userName.charAt(0)),
